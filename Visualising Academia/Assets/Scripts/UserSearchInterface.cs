@@ -10,59 +10,102 @@ using UnityEngine.UIElements;
 public class UserSearchInterface : MonoBehaviour
 {
 
+    //  The editor input fields to read in the user's input
     [SerializeField] private TMP_InputField FTitle;
     [SerializeField] private TMP_InputField FAuthorName;
     [SerializeField] private TMP_InputField FJournalTitle;
     [SerializeField] private TMP_InputField FKeyWords;
     [SerializeField] private TMP_InputField FYearPublished;
 
+    // Used to check whether a field has been typed into
     private const string FieldText = "Type here";
 
-    [SerializeField] private Transform originPoint;
+    // Where the ClosestMatch will be instantiated
+    public Transform originPoint;
+    // The prefab for all document nodes that will be instantiated.
     [SerializeField] private GameObject DocumentObj;
-    [SerializeField] private float avgDocDistance; // The distance documents will be separated
+    // The distance documents will be separated.
+    [SerializeField] private float avgDocDistance; 
 
-
-    private Document hit;
-    public bool searchComplete = false;
-
-    private void Start()
-    {
-    }
+    //  Used to signal to other scripts that this one is done handling the user's query.
+    public bool searchComplete = false; 
+    //  The user's query with appropriate matches, is accessed by other scripts once setup is done.
+    public SearchResult CompletedSearch { get; private set; }
+    
     private void Update()
     {
         if (Input.GetKeyDown("return") && !searchComplete)
             CommenceSearch();
-        //TODO: Compare the query document against the dataset and return exact and matching results.
     }
-
-    private void OnGUI()
-    {
-    }
-
+    
     public void CommenceSearch()
     {
         var art = DocumentPlotter.Instance.GetArticles();
         var search = GenerateQueryDocument();
         var doc = search.QueryDoc;
+        
+        // Go through the articles. If the data is valid, and matches the user's query, add it to the matches.
         foreach (var item in art)
         {
             if (item.title != null && doc.title == item.title) 
                 TrySetClosestMatch(search, item);
-            if (item.language != null && doc.language == item.language) TrySetClosestMatch(search, item);
-            if (item.publisher != null && doc.publisher == item.publisher) TrySetClosestMatch(search, item);
-            if (item.datePublished != null && doc.datePublished == item.datePublished) TrySetClosestMatch(search, item); // Not best option for matching, try another method
-            if (item.doi != null && doc.doi == item.doi) TrySetClosestMatch(search, item);
-            if (item.Authors != null && doc.Authors == item.Authors) TrySetClosestMatch(search, item);
-            if (item.topics != null && doc.topics == item.topics) TrySetClosestMatch(search, item);
+            if (item.language != null && doc.language == item.language) 
+                TrySetClosestMatch(search, item);
+            if (item.publisher != null && doc.publisher == item.publisher) 
+                TrySetClosestMatch(search, item);
+            if (item.datePublished != null && doc.datePublished == item.datePublished) 
+                TrySetClosestMatch(search, item); // Not best option for matching, try another method
+            if (item.doi != null && doc.doi == item.doi) 
+                TrySetClosestMatch(search, item);
+            if (item.Authors != null && doc.Authors == item.Authors) 
+                TrySetClosestMatch(search, item);
+            if (item.topics != null && doc.topics == item.topics) 
+                TrySetClosestMatch(search, item);
             // TODO: match id to read-in unigram in a separate function to get topics!!
         }
-        // TODO: Now instantiate the objects in space and make them be separate!
-        GameObject primaryMatch = Instantiate(DocumentObj, originPoint);
 
+        //  Create a GameObject that contains the data of the user's successful query.
+        GameObject primaryMatch = Instantiate(DocumentObj, originPoint);
         var comp = primaryMatch.AddComponent<Document>();
         comp.ApplyNewValues(search.closestMatch);
+        doc = search.closestMatch; // Reinitialise doc to find matching documents
+        //  Now loop back through articles, and populate the matches list with articles that have matching features.
+        foreach (var item in art)
+        {
+            // TODO: Add each category to a DIFFERENT list to distinguish them and make separation easier.
+            var check = false;
+            if (item.title == doc.title) continue;
 
+            if (item.publisher != null && doc.publisher == item.publisher&& !check)
+            {
+                TrySetClosestMatch(search, item, true);
+                check = true;
+            }
+
+            if (item.datePublished != null && doc.datePublished == item.datePublished&& !check)
+            {
+                TrySetClosestMatch(search, item, true);
+                check = true;
+            }
+
+            // if (item.doi != null && doc.doi == item.doi&& !check)
+            // {
+            //     TrySetClosestMatch(search, item, true);
+            //     check = true;
+            // }
+
+            if (item.Authors != null && doc.Authors == item.Authors&& !check)
+            {
+                TrySetClosestMatch(search, item, true);
+                check = true;
+            }
+
+            if (item.topics != null && doc.topics == item.topics&& !check)
+                TrySetClosestMatch(search, item, true);
+
+        }
+        CompletedSearch = search;
+        searchComplete = true; // Flag to other scripts to use my completed searchQuery.
     }
 
     private SearchResult GenerateQueryDocument()
@@ -91,17 +134,17 @@ public class UserSearchInterface : MonoBehaviour
         if (query == new SearchResult()) Debug.LogError("Error generating query document - \n no results applied!");
         return query;
     }
-    private void TrySetClosestMatch(SearchResult sr, DocumentData doc)
+    private void TrySetClosestMatch(SearchResult sr, DocumentData doc, bool isSetAlready = false)
     {
         var test = new DocumentData();
-        if (sr.closestMatch.title == "nulltitle")
+        if (sr.closestMatch.title == "nulltitle" || !isSetAlready)
             sr.SetClosestMatch(doc);
         else
             sr.AddMatch(doc);
 
             foreach (var VARIABLE in sr.matches)
         {
-            print(VARIABLE);
+            print(VARIABLE.title);
         }
     }
     private bool CheckFieldInput(TMP_InputField input)

@@ -76,5 +76,5 @@ public class DocumentData
         language = newDoc.language;
         id = newDoc.id;
     }
-    
+
 }

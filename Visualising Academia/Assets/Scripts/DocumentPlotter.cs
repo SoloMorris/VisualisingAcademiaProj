@@ -57,7 +57,7 @@ public class DocumentPlotter : MonoBehaviour
             newDoc.doi = System.Convert.ToString(dataList[i][plotter.doi]);
             newDoc.documentType = System.Convert.ToString(dataList[i][plotter.documentType]);
             newDoc.datePublished = System.Convert.ToString(dataList[i][plotter.datePublished]);
-            newDoc.isPartOf = System.Convert.ToString(dataList[i][plotter.language]);
+            newDoc.isPartOf = System.Convert.ToString(dataList[i][plotter.isPartOf]);
 
             
             //  Build the list of authors through a for-loop and separate them with ";"
@@ -79,12 +79,11 @@ public class DocumentPlotter : MonoBehaviour
         }
 
          //Print out some docs to see if everything works!
-        for (var i = 0; i < 5; i++)
-        {
-            var art = articles[i];
-            print(art.title +", " +art.Authors[0]);
-            if (art.Authors.Count > 1) print("Also, " +art.Authors[1]);
-        }
+        // for (var i = 0; i < 5; i++)
+        // {
+        //     var art = articles[i];
+        //     print(art.title +", " +art.publisher);
+        // }
 
         setupComplete = true;
 
