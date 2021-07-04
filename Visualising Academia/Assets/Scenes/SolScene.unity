@@ -2363,6 +2363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DocumentObj: {fileID: 311950553251774524, guid: 6a903ff9767d5b7419acd3cdcd7e8af5, type: 3}
   spawnPoint: {fileID: 0}
+  lr: {fileID: 4460215538009696008, guid: afc56995f4f289c43a8792a465fa0e7d, type: 3}
 --- !u!1 &875827094
 GameObject:
   m_ObjectHideFlags: 0

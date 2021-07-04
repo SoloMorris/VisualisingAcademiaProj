@@ -31,6 +31,7 @@ public class UserSearchInterface : MonoBehaviour
     public bool searchComplete = false; 
     //  The user's query with appropriate matches, is accessed by other scripts once setup is done.
     public SearchResult CompletedSearch { get; private set; }
+    public Document MainDocument { get; private set; }
     
     private void Update()
     {
@@ -105,6 +106,7 @@ public class UserSearchInterface : MonoBehaviour
 
         }
         CompletedSearch = search;
+        MainDocument = comp;
         searchComplete = true; // Flag to other scripts to use my completed searchQuery.
     }
 

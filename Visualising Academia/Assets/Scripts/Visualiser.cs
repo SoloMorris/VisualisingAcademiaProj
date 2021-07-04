@@ -7,6 +7,8 @@ public class Visualiser : LateSetup
     private List<List<DocumentData>> branches = new List<List<DocumentData>>();
     [SerializeField] private GameObject DocumentObj;
     [HideInInspector] public Transform spawnPoint;
+
+    [SerializeField] private LineRenderer lr;
     private void Update()
     {
         if (!IsSetupComplete())
@@ -28,6 +30,9 @@ public class Visualiser : LateSetup
             var newObj = Instantiate(DocumentObj, spawnOffset, spawnPoint.rotation);
             var comp = newObj.AddComponent<Document>();
             comp.ApplyNewValues(match);
+            var link = newObj.AddComponent<LinkToParent>();
+            link.lr = lr;
+            link.relatedDocuments.Add(MainDocument);
             //TODO:: Add a UI popup to show the info of each node INSIDE the game!
         }
 

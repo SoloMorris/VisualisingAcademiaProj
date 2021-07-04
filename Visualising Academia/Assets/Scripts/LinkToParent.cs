@@ -6,16 +6,13 @@ public class LinkToParent : LateSetup
 {
     public List<Document> relatedDocuments = new List<Document>();
 
-    private LineRenderer lr;
-    private List<LineRenderer> lines = new List<LineRenderer>();
-
+    public LineRenderer lr;
+    [SerializeField] private List<LineRenderer> lines = new List<LineRenderer>();
     void Start()
     {
-        lr = GetComponent<LineRenderer>();
         foreach (var doc in relatedDocuments)
         {
             var newLine = Instantiate(lr);
-            newLine.positionCount = 2;
             lines.Add(newLine);
         }
     }
