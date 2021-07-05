@@ -11,6 +11,7 @@ public class SearchHandler : MonoBehaviour
    private FilterSearch filter;
    private Visualiser visualiser;
    [SerializeField] private Transform spawnPoint;
+   [SerializeField] private GameObject searchMenuCanvas;
    private void Awake()
    {
       search = GetComponentInChildren<UserSearchInterface>();
@@ -19,10 +20,17 @@ public class SearchHandler : MonoBehaviour
       filter.enabled = false;
       visualiser.enabled = false;
       spawnPoint = search.originPoint;
+      Camera.main.GetComponent<FreeFlyCamera>()._active = false;
+
    }
 
    private void Update()
    {
+      if (search.searchComplete)
+      {
+         searchMenuCanvas.SetActive(false);
+      }
+
       if (search.searchComplete && !filter.isActiveAndEnabled)
          EnableFilterScript();
       if (search.searchComplete && !visualiser.isActiveAndEnabled)

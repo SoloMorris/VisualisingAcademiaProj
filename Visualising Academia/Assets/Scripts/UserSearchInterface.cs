@@ -108,6 +108,7 @@ public class UserSearchInterface : MonoBehaviour
         CompletedSearch = search;
         MainDocument = comp;
         searchComplete = true; // Flag to other scripts to use my completed searchQuery.
+        Camera.main.GetComponent<FreeFlyCamera>()._active = true;
     }
 
     private SearchResult GenerateQueryDocument()

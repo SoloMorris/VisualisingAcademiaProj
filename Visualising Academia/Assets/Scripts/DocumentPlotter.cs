@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -58,6 +59,7 @@ public class DocumentPlotter : MonoBehaviour
             newDoc.documentType = System.Convert.ToString(dataList[i][plotter.documentType]);
             newDoc.datePublished = System.Convert.ToString(dataList[i][plotter.datePublished]);
             newDoc.isPartOf = System.Convert.ToString(dataList[i][plotter.isPartOf]);
+            newDoc.publisher = System.Convert.ToString(dataList[i][plotter.publisher]);
 
             
             //  Build the list of authors through a for-loop and separate them with ";"
