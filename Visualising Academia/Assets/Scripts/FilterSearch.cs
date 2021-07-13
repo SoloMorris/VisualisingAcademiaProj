@@ -5,15 +5,26 @@ using UnityEngine.UI;
 
 public class FilterSearch : LateSetup
 {
+   [SerializeField] 
+   private GameObject uiPanel;
    void Update()
    {
-      if (IsSetupComplete())
+      if (!IsSetupComplete())
       {
          
       }
    }
 
-   
+
+   public void EnableFilterUI()
+   {
+      
+   }
+
+   public void DisableFilterUI()
+   {
+      
+   }
    
 }
 

@@ -15,9 +15,7 @@ public class SearchHandler : MonoBehaviour
    private void Awake()
    {
       search = GetComponentInChildren<UserSearchInterface>();
-      filter = GetComponentInChildren<FilterSearch>();
       visualiser = GetComponent<Visualiser>();
-      filter.enabled = false;
       visualiser.enabled = false;
       spawnPoint = search.originPoint;
       Camera.main.GetComponent<FreeFlyCamera>()._active = false;
@@ -30,9 +28,6 @@ public class SearchHandler : MonoBehaviour
       {
          searchMenuCanvas.SetActive(false);
       }
-
-      if (search.searchComplete && !filter.isActiveAndEnabled)
-         EnableFilterScript();
       if (search.searchComplete && !visualiser.isActiveAndEnabled)
          EnableVisualiserScript();
    }
@@ -44,7 +39,6 @@ public class SearchHandler : MonoBehaviour
 
       filter.AssignUserQuery(search.CompletedSearch, search.MainDocument);
    }
-
    public void EnableVisualiserScript()
    {
       visualiser.enabled = true;

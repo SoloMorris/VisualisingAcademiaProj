@@ -37,29 +37,28 @@ public class DocumentPlotter : MonoBehaviour
         //
          List<string> columnList = new List<string>(dataList[1].Keys);
          DocumentData plotter = new DocumentData(); // Map out the keys of the csv
-         plotter.id = columnList[0];
-         plotter.title = columnList[1];
-         plotter.isPartOf = columnList[2];
-         plotter.doi = columnList[4];
-         plotter.documentType = columnList[5];
-         plotter.datePublished = columnList[7];
+         plotter.Url.SetAttributeValue(columnList[0]);
+         plotter.Title.SetAttributeValue(columnList[1]);
+         plotter.IsPartOf.SetAttributeValue(columnList[2]);
+         plotter.Doi.SetAttributeValue(columnList[4]);
+         plotter.DocumentType.SetAttributeValue(columnList[5]);
+         plotter.DatePublished.SetAttributeValue(columnList[7]);
          string authours = columnList[11];
-         plotter.publisher = columnList[12];
-         plotter.language = columnList[13];
+         plotter.Publisher.SetAttributeValue(columnList[12]);
+         plotter.Language.SetAttributeValue(columnList[13]);
 
          for (int i = 0; i < dataList.Count - 1; i++)
         {
             DocumentData newDoc = new DocumentData();
             
-            print(dataList.Count);
-            newDoc.title = System.Convert.ToString(dataList[i][plotter.title]);
-            newDoc.language = System.Convert.ToString(dataList[i][plotter.language]);
-            newDoc.isPartOf = System.Convert.ToString(dataList[i][plotter.isPartOf]);
-            newDoc.doi = System.Convert.ToString(dataList[i][plotter.doi]);
-            newDoc.documentType = System.Convert.ToString(dataList[i][plotter.documentType]);
-            newDoc.datePublished = System.Convert.ToString(dataList[i][plotter.datePublished]);
-            newDoc.isPartOf = System.Convert.ToString(dataList[i][plotter.isPartOf]);
-            newDoc.publisher = System.Convert.ToString(dataList[i][plotter.publisher]);
+            newDoc.Title.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.Title.AttributeValue]));
+            newDoc.Language.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.Language.AttributeValue]));
+            newDoc.IsPartOf.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.IsPartOf.AttributeValue]));
+            newDoc.Doi.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.Doi.AttributeValue]));
+            newDoc.DocumentType.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.DocumentType.AttributeValue]));
+            newDoc.DatePublished.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.DatePublished.AttributeValue]));
+            newDoc.IsPartOf.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.IsPartOf.AttributeValue]));
+            newDoc.Publisher.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.Publisher.AttributeValue]));
 
             
             //  Build the list of authors through a for-loop and separate them with ";"
@@ -69,23 +68,23 @@ public class DocumentPlotter : MonoBehaviour
             {
                 if (authorList[j] == ';')
                 {
-                    newDoc.Authors.Add(stringVar);
+                    newDoc.Authors.AddToAttributesList(stringVar);
                     stringVar = "";
                     j++;
                     continue;
                 }
                 stringVar += authorList[j];
             }
-            newDoc.Authors.Add(stringVar);
+            newDoc.Authors.AddToAttributesList(stringVar);
             articles.Add(newDoc);
         }
 
          //Print out some docs to see if everything works!
-        // for (var i = 0; i < 5; i++)
-        // {
-        //     var art = articles[i];
-        //     print(art.title +", " +art.publisher);
-        // }
+         // for (var i = 0; i < 5; i++)
+         // {
+         //     var art = articles[i];
+         //     print(art.Title.AttributeValue +", " +art.Publisher.AttributeValue);
+         // }
 
         setupComplete = true;
 

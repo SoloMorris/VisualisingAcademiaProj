@@ -13,7 +13,8 @@ public class UserSearchInterface : MonoBehaviour
     //  The editor input fields to read in the user's input
     [SerializeField] private TMP_InputField FTitle;
     [SerializeField] private TMP_InputField FAuthorName;
-    [SerializeField] private TMP_InputField FJournalTitle;
+    [SerializeField] private TMP_InputField FPublisher;
+    [SerializeField] private TMP_InputField FIsPartOf;
     [SerializeField] private TMP_InputField FKeyWords;
     [SerializeField] private TMP_InputField FYearPublished;
 
@@ -44,24 +45,45 @@ public class UserSearchInterface : MonoBehaviour
         var art = DocumentPlotter.Instance.GetArticles();
         var search = GenerateQueryDocument();
         var doc = search.QueryDoc;
-        
+        var isMatchFound = false;
         // Go through the articles. If the data is valid, and matches the user's query, add it to the matches.
         foreach (var item in art)
         {
-            if (item.title != null && doc.title == item.title) 
-                TrySetClosestMatch(search, item);
-            if (item.language != null && doc.language == item.language) 
-                TrySetClosestMatch(search, item);
-            if (item.publisher != null && doc.publisher == item.publisher) 
-                TrySetClosestMatch(search, item);
-            if (item.datePublished != null && doc.datePublished == item.datePublished) 
-                TrySetClosestMatch(search, item); // Not best option for matching, try another method
-            if (item.doi != null && doc.doi == item.doi) 
-                TrySetClosestMatch(search, item);
-            if (item.Authors != null && doc.Authors == item.Authors) 
-                TrySetClosestMatch(search, item);
-            if (item.topics != null && doc.topics == item.topics) 
-                TrySetClosestMatch(search, item);
+            if (CompareAttributes(doc.Title, item.Title) && !isMatchFound)
+            {
+                search.SetClosestMatch(item);
+                isMatchFound = true;
+                continue;
+            }
+
+            if (CompareAttributes(doc.Abstract, item.Abstract))
+            {
+                SetDocMatch(ref isMatchFound, search, item);
+                continue;
+            }
+             
+            if (CompareAttributes(doc.Authors, item.Authors, true))
+            {
+                SetDocMatch(ref isMatchFound, search, item);
+                continue;
+            }
+            if (CompareAttributes(doc.Publisher, item.Publisher))
+            {
+                SetDocMatch(ref isMatchFound, search, item);
+                continue;
+            }
+            
+            if (CompareAttributes(doc.IsPartOf, item.IsPartOf))
+            {
+                SetDocMatch(ref isMatchFound, search, item);
+                continue;
+            }
+            
+            if (CompareAttributes(doc.DatePublished, item.DatePublished))
+            {
+                SetDocMatch(ref isMatchFound, search, item);
+            }
+            
             // TODO: match id to read-in unigram in a separate function to get topics!!
         }
 
@@ -71,39 +93,28 @@ public class UserSearchInterface : MonoBehaviour
         comp.ApplyNewValues(search.closestMatch);
         doc = search.closestMatch; // Reinitialise doc to find matching documents
         //  Now loop back through articles, and populate the matches list with articles that have matching features.
+        var workaround = true;
         foreach (var item in art)
         {
             // TODO: Add each category to a DIFFERENT list to distinguish them and make separation easier.
-            var check = false;
-            if (item.title == doc.title) continue;
+            if (item.Title == doc.Title) continue;
 
-            if (item.publisher != null && doc.publisher == item.publisher&& !check)
+            if (CompareAttributes(doc.Publisher, item.Publisher))
             {
-                TrySetClosestMatch(search, item, true);
-                check = true;
+                search.AddMatch(item);
+                continue;
             }
-
-            if (item.datePublished != null && doc.datePublished == item.datePublished&& !check)
+            
+            if (CompareAttributes(doc.Authors, item.Authors, true))
             {
-                TrySetClosestMatch(search, item, true);
-                check = true;
+                search.AddMatch(item);
+                continue;
             }
-
-            // if (item.doi != null && doc.doi == item.doi&& !check)
-            // {
-            //     TrySetClosestMatch(search, item, true);
-            //     check = true;
-            // }
-
-            if (item.Authors != null && doc.Authors == item.Authors&& !check)
+            if (CompareAttributes(doc.DatePublished, item.DatePublished))
             {
-                TrySetClosestMatch(search, item, true);
-                check = true;
+                search.AddMatch(item);
             }
-
-            if (item.topics != null && doc.topics == item.topics&& !check)
-                TrySetClosestMatch(search, item, true);
-
+           
         }
         CompletedSearch = search;
         MainDocument = comp;
@@ -111,60 +122,55 @@ public class UserSearchInterface : MonoBehaviour
         Camera.main.GetComponent<FreeFlyCamera>()._active = true;
     }
 
-    private SearchResult GenerateQueryDocument()
+    private static void SetDocMatch(ref bool isMatchFound, SearchResult search, DocumentData item)
     {
-        var query = new SearchResult();
-        if (CheckFieldInput(FTitle))
+        if (isMatchFound)
         {
-            GenerateSearchResults(FTitle.text, ref query.QueryDoc.title );
+            search.AddMatch(item);
+            return;
         }
-        if (CheckFieldInput(FAuthorName))
-        {
-            GenerateSearchResults(FAuthorName.text, ref query.QueryDoc.Authors );
-        }
-        if (CheckFieldInput(FJournalTitle))
-        {
-            GenerateSearchResults(FJournalTitle.text, ref query.QueryDoc.publisher );
-        }
-        if (CheckFieldInput(FKeyWords))
-        {
-            GenerateSearchResults(FKeyWords.text, ref query.QueryDoc.topics );
-        }
-        if (CheckFieldInput(FYearPublished))
-        {
-            GenerateSearchResults(FYearPublished.text, ref query.QueryDoc.datePublished );
-        }
-        if (query == new SearchResult()) Debug.LogError("Error generating query document - \n no results applied!");
-        return query;
-    }
-    private void TrySetClosestMatch(SearchResult sr, DocumentData doc, bool isSetAlready = false)
-    {
-        var test = new DocumentData();
-        if (sr.closestMatch.title == "nulltitle" || !isSetAlready)
-            sr.SetClosestMatch(doc);
-        else
-            sr.AddMatch(doc);
-
-            foreach (var VARIABLE in sr.matches)
-        {
-            print(VARIABLE.title);
-        }
-    }
-    private bool CheckFieldInput(TMP_InputField input)
-    {
-        return !String.Equals(input.text, FieldText);
+        search.SetClosestMatch(item);
+        isMatchFound = true;
     }
 
     /// <summary>
-    /// Take a search query and apply it to a new location -- i.e. the QueryDoc in a SearchResult.
+    /// Checks if the query is null, then if it is the same as source.
     /// </summary>
-    /// <param name="input">The search query</param>
-    /// <param name="location">Where to apply the query</param>
-    public void GenerateSearchResults(string input, ref string location)
+    /// <param name="query"></param>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    private bool CompareAttributes<T>(DocAttribute<T> query, DocAttribute<T> source)
     {
-        location = input;
-    }  
-    public void GenerateSearchResults(string input, ref List<string> location)
+        return query.AttributeValue != null && query.AttributeValue.Equals(source.AttributeValue);
+    }
+    private bool CompareAttributes<T>(DocAttribute<T> query, DocAttribute<T> source, bool isList = false)
+    {
+        return query.AttributesList != null && query.AttributesList.Equals(source.AttributesList);
+    }
+    
+    /// <summary>
+    /// Creates a SearchResult by reading whichever fields the user filled in.
+    /// </summary>
+    /// <returns></returns>
+    private SearchResult GenerateQueryDocument()
+    {
+        var query = new SearchResult();
+        ReadValidInputFields(ref query.QueryDoc);
+        if (query == new SearchResult()) Debug.LogError("Error generating query document - \n no results applied!");
+        return query;
+    }
+    
+    private void ReadValidInputFields(ref DocumentData data)
+    {
+        if (!String.Equals(FTitle.text, FieldText)) data.Title.SetAttributeValue(FTitle.text);
+        if (!String.Equals(FAuthorName.text, FieldText)) ParseTextIntoList(FAuthorName.text, data.Authors);
+        //if (!String.Equals(FPublisher.text, FieldText)) data.Publisher.SetAttributeValue(FPublisher.text);
+        //if (!String.Equals(FIsPartOf.text, FieldText)) data.IsPartOf.SetAttributeValue(FIsPartOf.text);
+        if (!String.Equals(FYearPublished.text, FieldText)) data.DatePublished.SetAttributeValue(FYearPublished.text);
+    }
+    
+    public void ParseTextIntoList(string input, DocAttribute<string> output)
     {
         string term = "";
         
@@ -172,13 +178,13 @@ public class UserSearchInterface : MonoBehaviour
         {
             if (t == ',')
             {
-                location.Add(term);
+                output.AddToAttributesList(term);
                 term = "";
                 continue;
             }
             term += t;
         }
-        location.Add(term);
+        output.AddToAttributesList(term);
     }
     
 }
