@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class LateSetup : MonoBehaviour
 {
-    protected SearchResult userQuery { get; private set; }
-    protected Document MainDocument { get; private set; }
+    protected CompleteSearch CompletedSearch;
     public bool setupComplete { get; protected set; }
 
     protected List<DocumentData> articles;
@@ -14,10 +13,9 @@ public class LateSetup : MonoBehaviour
     {
         articles = DocumentPlotter.Instance.GetArticles();
     }
-    public void AssignUserQuery(SearchResult newQuery, Document newDocument)
+    public void AssignCompleteSearch(CompleteSearch newS)
     {
-        userQuery = newQuery;
-        MainDocument = newDocument;
+        CompletedSearch = newS;
     }
 
     protected bool IsSetupComplete()

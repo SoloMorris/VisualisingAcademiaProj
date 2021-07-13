@@ -24,7 +24,6 @@ public class PopupDisplay : MonoBehaviour
             if (newData.Authors.AttributesList.Count > i + 1)
                 AuthorField.text += ", ";
         }
-        print("Creating");
         DateField.text = newData.DatePublished.AttributeValue;
         isPartofField.text = newData.IsPartOf.AttributeValue;
         PublisherField.text = newData.Publisher.AttributeValue;

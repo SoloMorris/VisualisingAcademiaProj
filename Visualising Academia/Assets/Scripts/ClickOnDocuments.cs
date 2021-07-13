@@ -33,7 +33,6 @@ public class ClickOnDocuments : MonoBehaviour
         //  If we hit a document object, display the Popup Window
         else if (hit.transform.gameObject.TryGetComponent(out Document doc))
         {
-            print("Hit the sphere again");
             if (displayWindow.GetComponent<PopupDisplay>().TitleField.text == doc.Title.AttributeValue) return;
             targetDoc = doc.gameObject;
             displayWindow.GetComponent<PopupDisplay>().CloseWindow();

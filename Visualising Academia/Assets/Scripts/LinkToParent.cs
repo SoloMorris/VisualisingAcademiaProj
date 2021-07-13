@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class LinkToParent : LateSetup
 {
     public List<Document> relatedDocuments = new List<Document>();
+    public List<string> relationTypes = new List<string>();
 
     public LineRenderer lr;
     [SerializeField] private List<LineRenderer> lines = new List<LineRenderer>();

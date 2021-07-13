@@ -31,7 +31,7 @@ public class UserSearchInterface : MonoBehaviour
     //  Used to signal to other scripts that this one is done handling the user's query.
     public bool searchComplete = false; 
     //  The user's query with appropriate matches, is accessed by other scripts once setup is done.
-    public SearchResult CompletedSearch { get; private set; }
+    public CompleteSearch CompletedSearch { get; private set; }
     public Document MainDocument { get; private set; }
     
     private void Update()
@@ -91,44 +91,52 @@ public class UserSearchInterface : MonoBehaviour
         GameObject primaryMatch = Instantiate(DocumentObj, originPoint);
         var comp = primaryMatch.AddComponent<Document>();
         comp.ApplyNewValues(search.closestMatch);
-        doc = search.closestMatch; // Reinitialise doc to find matching documents
         //  Now loop back through articles, and populate the matches list with articles that have matching features.
         var workaround = true;
+        
+        CompletedSearch = new CompleteSearch(comp);
+        CompletedSearch.Query = search;
+        var completedSearchQuery = CompletedSearch.Query;
+        var closestMatch = completedSearchQuery.closestMatch;
+
         foreach (var item in art)
         {
             // TODO: Add each category to a DIFFERENT list to distinguish them and make separation easier.
-            if (item.Title == doc.Title) continue;
+            if (item.Title == closestMatch.Title) continue;
 
-            if (CompareAttributes(doc.Publisher, item.Publisher))
+            if (CompareAttributes(closestMatch.Publisher, item.Publisher))
             {
-                search.AddMatch(item);
+                completedSearchQuery.AddMatch(item);
+                completedSearchQuery.matchName.Add(closestMatch.Publisher.AttributeTitle);
                 continue;
             }
             
-            if (CompareAttributes(doc.Authors, item.Authors, true))
+            if (CompareAttributes(closestMatch.Authors, item.Authors, true))
             {
-                search.AddMatch(item);
+                completedSearchQuery.AddMatch(item);
+                completedSearchQuery.matchName.Add(closestMatch.Authors.AttributeTitle);
                 continue;
             }
-            if (CompareAttributes(doc.DatePublished, item.DatePublished))
+            if (CompareAttributes(closestMatch.DatePublished, item.DatePublished))
             {
-                search.AddMatch(item);
+                completedSearchQuery.AddMatch(item);
+                completedSearchQuery.matchName.Add(closestMatch.DatePublished.AttributeTitle);
             }
-           
+           if (completedSearchQuery.matches.Count != completedSearchQuery.matchName.Count)
+               Debug.LogError("Error! Matches for OriginDocument don't add up!");
         }
-        CompletedSearch = search;
-        MainDocument = comp;
+       
         searchComplete = true; // Flag to other scripts to use my completed searchQuery.
         Camera.main.GetComponent<FreeFlyCamera>()._active = true;
     }
 
     private static void SetDocMatch(ref bool isMatchFound, SearchResult search, DocumentData item)
     {
-        if (isMatchFound)
-        {
-            search.AddMatch(item);
-            return;
-        }
+        // if (isMatchFound)
+        // {
+        //     search.AddMatch(item);
+        //     return;
+        // }
         search.SetClosestMatch(item);
         isMatchFound = true;
     }
@@ -142,11 +150,11 @@ public class UserSearchInterface : MonoBehaviour
     /// <returns></returns>
     private bool CompareAttributes<T>(DocAttribute<T> query, DocAttribute<T> source)
     {
-        return query.AttributeValue != null && query.AttributeValue.Equals(source.AttributeValue);
+        return query.AttributeValue != null && source.AttributeValue != null && query.AttributeValue.Equals(source.AttributeValue);
     }
-    private bool CompareAttributes<T>(DocAttribute<T> query, DocAttribute<T> source, bool isList = false)
+    private bool CompareAttributes<T>(DocAttribute<T> query, DocAttribute<T> source, bool isList = false) // TODO: This is just wrong
     {
-        return query.AttributesList != null && query.AttributesList.Equals(source.AttributesList);
+        return query.AttributesList != null && source.AttributesList != null && query.AttributesList.Equals(source.AttributesList);
     }
     
     /// <summary>
@@ -160,6 +168,7 @@ public class UserSearchInterface : MonoBehaviour
         if (query == new SearchResult()) Debug.LogError("Error generating query document - \n no results applied!");
         return query;
     }
+    
     
     private void ReadValidInputFields(ref DocumentData data)
     {
@@ -196,6 +205,8 @@ public class SearchResult
         QueryDoc = new DocumentData();
         closestMatch = new DocumentData();
         matches = new List<DocumentData>();
+        matchName = new List<string>();
+
     }
 
     public DocumentData QueryDoc;
@@ -206,10 +217,25 @@ public class SearchResult
         closestMatch = match;
     }
     public List<DocumentData> matches { get; private set; }
+    public List<string> matchName; // 
 
     public void AddMatch(DocumentData match)
     {
         matches.Add(match);
     }
     
+}
+
+public class CompleteSearch
+{
+    public CompleteSearch(Document originDocument)
+    {
+        Query = new SearchResult();
+        MatchTypes = new List<string>();
+        OriginDocument = originDocument;
+    }
+
+    public SearchResult Query;
+    public Document OriginDocument;
+    public List<string> MatchTypes;
 }

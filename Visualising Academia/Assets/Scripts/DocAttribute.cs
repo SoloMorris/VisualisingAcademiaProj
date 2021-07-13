@@ -11,12 +11,9 @@ public class DocAttribute<T>
     {
         AttributeTitle = newTitle;
         AttributeValue = baseValue;
+        AttributesList = new List<T>();
     }
-    public DocAttribute(string newTitle)
-    {
-        AttributeTitle = newTitle;
-    }
-    
+
     /// <summary>
     /// Used to identify the category of this Attribute, i.e "Title" or "Authors"
     /// </summary>
