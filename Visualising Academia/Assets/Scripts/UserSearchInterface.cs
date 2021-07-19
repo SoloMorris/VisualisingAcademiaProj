@@ -32,6 +32,7 @@ public class UserSearchInterface : MonoBehaviour
     public bool searchComplete = false; 
     //  The user's query with appropriate matches, is accessed by other scripts once setup is done.
     public CompleteSearch CompletedSearch { get; private set; }
+    public DocNode OriginNode;
     public Document MainDocument { get; private set; }
     
     private void Update()
@@ -89,17 +90,18 @@ public class UserSearchInterface : MonoBehaviour
 
         //  Create a GameObject that contains the data of the user's successful query.
         GameObject primaryMatch = Instantiate(DocumentObj, originPoint);
-        var comp = primaryMatch.AddComponent<Document>();
-        comp.ApplyNewValues(search.closestMatch);
+        var comp = primaryMatch.AddComponent<DocNode>();
+        comp.ApplyDocumentData(search.closestMatch);
+        OriginNode = comp;
         //  Now loop back through articles, and populate the matches list with articles that have matching features.
         var workaround = true;
         
-        CompletedSearch = new CompleteSearch(comp);
+        CompletedSearch = new CompleteSearch(OriginNode.Data);
         CompletedSearch.Query = search;
         var completedSearchQuery = CompletedSearch.Query;
         var closestMatch = completedSearchQuery.closestMatch;
 
-        foreach (var item in art)
+        foreach (var item in art) //  This bit may be redundant
         {
             // TODO: Add each category to a DIFFERENT list to distinguish them and make separation easier.
             if (item.Title == closestMatch.Title) continue;

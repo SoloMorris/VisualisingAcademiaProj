@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 public enum DocumentType
@@ -30,7 +32,8 @@ public class Document  : MonoBehaviour
     public DocAttribute<string> Publisher = new DocAttribute<string>("Publisher", null);
     public DocAttribute<string> Topics = new DocAttribute<string>("Topics", null);
     public DocAttribute<string> Language = new DocAttribute<string>("Language", null);
-    public DocAttribute<string> Url = new DocAttribute<string>("Web URL", null);
+    public DocAttribute<string> Url = new DocAttribute<string>("Web URL", null); 
+    
     public DocumentData docData { get; private set; } //TODO: Just do this instead
 
     public void ApplyNewValues(DocumentData newDoc)
@@ -68,33 +71,118 @@ public class DocumentData
     public string matchType = "";
 }
 
-// public class DocumentData
-// {
-//     public string title = "nulltitle";
-//     public string Abstract;
-//     public List<string> Authors = new List<string>();
-//     public string datePublished;
-//     public string documentType;
-//     public string doi;
-//     public string isPartOf;
-//     public string publisher;
-//     public List<string> topics = new List<string>();
-//     public string language;
-//     public string id;
-//
-//     public void ApplyNewValues(DocumentData newDoc)
-//     {
-//         title = newDoc.title;
-//         Abstract = newDoc.Abstract;
-//         Authors = newDoc.Authors;
-//         datePublished = newDoc.datePublished;
-//         documentType = newDoc.documentType;
-//         doi = newDoc.doi;
-//         isPartOf = newDoc.isPartOf;
-//         publisher = newDoc.publisher;
-//         topics = newDoc.topics;
-//         language = newDoc.language;
-//         id = newDoc.id;
-//     }
-//
-// }
+public class DocNode : MonoBehaviour
+{
+    /// <summary>
+    /// The data held by the node such as title, authors etc.
+    /// </summary>
+    private Document data;
+    
+    /// <summary>
+    /// The Node that spawned this node. leave null if this is the original search node.
+    /// </summary>
+    private DocNode parent;
+
+    /// <summary>
+    /// Any nodes spawned by this node.
+    /// </summary>
+    private List<DocNode> children;
+
+    /// <summary>
+    /// Any Connections that have this Node set as target. Will always have parent at 0.
+    /// </summary>
+    public List<NodeConnection> incomingConnections;
+
+
+    /// <summary>
+    /// Connections going to children or other related nodes.
+    /// </summary>
+    public List<NodeConnection> outgoingConnections;
+
+
+    public DocNode(Document nData)
+    {
+        Data = nData;
+        Parent = null;
+        Children = new List<DocNode>();
+        incomingConnections = new List<NodeConnection>();
+        outgoingConnections = new List<NodeConnection>();
+    }
+    
+    public DocNode(DocumentData nData)
+    {
+        ApplyDocumentData(nData);
+        Parent = null;
+        Children = new List<DocNode>();
+        incomingConnections = new List<NodeConnection>();
+        outgoingConnections = new List<NodeConnection>();
+    }
+
+    public void ApplyDocumentData(DocumentData nData)
+    {
+        if (nData == null)
+        {
+            Debug.LogError("Data not valid");
+            return;
+        }
+        Data = gameObject.AddComponent<Document>();
+        data.ApplyNewValues(nData);
+    }
+
+    /// <summary>
+    /// Any nodes spawned by this node.
+    /// </summary>
+    public List<DocNode> Children
+    {
+        get => children;
+        set => children = value;
+    }
+
+    /// <summary>
+    /// The Node that spawned this node. leave null if this is the original search node.
+    /// </summary>
+    public DocNode Parent
+    {
+        get => parent;
+        set => parent = value;
+    }
+
+    /// <summary>
+    /// The data held by the node such as title, authors etc.
+    /// </summary>
+    public Document Data
+    {
+        get => data;
+        set { data = value; }
+    }
+}
+
+public enum ConnectionType
+{
+    Title,
+    Authors,
+    Publisher,
+    Date
+}
+public class NodeConnection : MonoBehaviour
+{
+    public void Setup(LineRenderer lr, DocNode nOrigin, DocNode nTarget)
+    {
+        connection = lr;
+        origin = nOrigin;
+        target = nTarget;
+    }
+    public ConnectionType connectionType { get; private set; }
+    public void SetConnectionType(ConnectionType desiredType)
+    {
+        connectionType = desiredType;
+    }
+    
+    public bool IsConnectionOfType(ConnectionType desiredType)
+    {
+        return connectionType == desiredType;
+    }
+    public LineRenderer connection;
+    public DocNode origin;
+    public DocNode target;
+}

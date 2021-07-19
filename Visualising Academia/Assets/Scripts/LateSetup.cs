@@ -5,6 +5,7 @@ using UnityEngine;
 public class LateSetup : MonoBehaviour
 {
     protected CompleteSearch CompletedSearch;
+    protected DocNode OriginNode;
     public bool setupComplete { get; protected set; }
 
     protected List<DocumentData> articles;
@@ -13,9 +14,10 @@ public class LateSetup : MonoBehaviour
     {
         articles = DocumentPlotter.Instance.GetArticles();
     }
-    public void AssignCompleteSearch(CompleteSearch newS)
+    public void AssignCompleteSearch(CompleteSearch newS, DocNode newN)
     {
         CompletedSearch = newS;
+        OriginNode = newN;
     }
 
     protected bool IsSetupComplete()

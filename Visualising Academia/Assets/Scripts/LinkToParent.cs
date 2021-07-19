@@ -23,11 +23,10 @@ public class LinkToParent : LateSetup
     {
         for (int i = 0; i < lines.Count; i++)
         {
+            if (lines[i].GetPosition(0).Equals(transform.position)) continue;
             lines[i].SetPosition(0, transform.position);
             lines[i].SetPosition(1, relatedDocuments[i].transform.position);
         }
-        
-        
     }
     
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows.WebCam;
 
 public class Visualiser : LateSetup
 {
@@ -32,16 +33,18 @@ public class Visualiser : LateSetup
             
             //  Instantiate the object and attach the document data to it
             var newObj = Instantiate(DocumentObj, spawnOffset, spawnPoint.rotation);
-            var comp = newObj.AddComponent<Document>();
-            comp.ApplyNewValues(match);
-            var link = newObj.AddComponent<LinkToParent>();
-            link.lr = lr;
-            link.relatedDocuments.Add(CompletedSearch.OriginDocument);
+            var comp = newObj.AddComponent<DocNode>();
+            comp.ApplyDocumentData(match);
+            //link.relatedDocuments.Add(CompletedSearch.OriginDocument);
+            
+            // Connect the new Node to the Origin
+            
+            
             
             //  Finds this document inside the search query's list of relations, so that it can be displayed
-            var index = CompletedSearch.Query.matches.FindIndex(0, CompletedSearch.Query.matches.Count,
-                data => data.Title == comp.docData.Title);
-            link.relationTypes.Add(CompletedSearch.Query.matchName[index]);
+           // var index = CompletedSearch.Query.matches.FindIndex(0, CompletedSearch.Query.matches.Count,
+           //     data => data.Title == comp.docData.Title);
+           // link.relationTypes.Add(CompletedSearch.Query.matchName[index]);
             
             instances.Add(newObj);
 
@@ -82,9 +85,39 @@ public class Visualiser : LateSetup
 
         return false;
     }
-    
-    private void SetupLinks()
+
+    private void CompareNodes(DocNode comparisonA, DocNode comparisonB)
     {
-        
+        var aData = comparisonA.Data;
+        var bData = comparisonB.Data;
+        if (aData.Publisher.Equals(bData.Publisher))
+        {
+            var originConnection = comparisonA.gameObject.AddComponent<NodeConnection>();
+            originConnection.Setup(lr, OriginNode, comparisonA);
+            comparisonA.incomingConnections.Add(originConnection);
+        }
+    }
+
+    private void GenerateConnection(ConnectionType connectionType, DocNode origin, DocNode target)
+    {
+        var newCon = origin.gameObject.AddComponent<NodeConnection>();
+        newCon.Setup(lr, origin, target);
+        newCon.SetConnectionType(connectionType);
+    }
+
+    private void ApplyLineSettings(ref NodeConnection connection)
+    {
+        switch (connection.connectionType)
+        {
+            case ConnectionType.Authors:
+                break;
+            case ConnectionType.Date:
+                break;
+            case ConnectionType.Publisher:
+                break;
+            case ConnectionType.Title:
+                break;
+                //TODO: This.
+        }
     }
 }

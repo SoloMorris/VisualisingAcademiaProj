@@ -37,14 +37,14 @@ public class SearchHandler : MonoBehaviour
       filter.enabled = true;
       print("filter enabled");
 
-      filter.AssignCompleteSearch(search.CompletedSearch);
+      filter.AssignCompleteSearch(search.CompletedSearch, search.OriginNode);
    }
    public void EnableVisualiserScript()
    {
       visualiser.enabled = true;
       print("visualiser enabled");
       visualiser.spawnPoint = spawnPoint;
-      visualiser.AssignCompleteSearch(search.CompletedSearch);
+      visualiser.AssignCompleteSearch(search.CompletedSearch, search.OriginNode);
    }
    
 }
