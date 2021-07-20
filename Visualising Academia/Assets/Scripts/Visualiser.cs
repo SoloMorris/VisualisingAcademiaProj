@@ -133,9 +133,10 @@ public class Visualiser : LateSetup
         originConnection.Setup(lr, comparisonB, comparisonA);
         comparisonA.incomingConnections.Add(originConnection);
         comparisonB.outgoingConnections.Add(originConnection);
-        originConnection.SetConnectionType(ConnectionType.Publisher);
+        originConnection.SetConnectionType(desiredConType);
         ApplyLineSettings(ref originConnection);
         originConnection.connection.enabled = false;
+        
     }
 
     private bool IsRelated(DocumentData source, DocumentData comparison)
@@ -150,19 +151,26 @@ public class Visualiser : LateSetup
 
     private void ApplyLineSettings(ref NodeConnection connection)
     {
+        //Debug.Log("working1");
         switch (connection.connectionType)
         {
             case ConnectionType.Authors:
+                Debug.Log("working2");
+                connection.connection.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 connection.connection.startColor = AuthorColour;
                 connection.connection.endColor = AuthorColour;
                 connection.Create();
                 break;
             case ConnectionType.Date:
+                Debug.Log("working3");
+                connection.connection.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 connection.connection.startColor = DateColour;
                 connection.connection.endColor = DateColour;
                 connection.Create();
                 break;
             case ConnectionType.Publisher:
+                Debug.Log("working4");
+                connection.connection.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 connection.connection.startColor = PublisherColour;
                 connection.connection.endColor = PublisherColour;
                 connection.Create();
