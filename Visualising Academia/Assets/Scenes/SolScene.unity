@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd6c6200810b214d9e5c59dc9bdd64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputFile: dataset
+  inputFile: Dataset
   setupComplete: 0
 --- !u!4 &227300611
 Transform:
@@ -1456,6 +1456,7 @@ MonoBehaviour:
   DocumentObj: {fileID: 311950553251774524, guid: 6a903ff9767d5b7419acd3cdcd7e8af5, type: 3}
   avgDocDistance: 0
   searchComplete: 0
+  OriginNode: {fileID: 0}
 --- !u!1 &562773510
 GameObject:
   m_ObjectHideFlags: 0
@@ -2495,6 +2496,9 @@ MonoBehaviour:
   DocumentObj: {fileID: 311950553251774524, guid: 6a903ff9767d5b7419acd3cdcd7e8af5, type: 3}
   spawnPoint: {fileID: 0}
   lr: {fileID: 4460215538009696008, guid: afc56995f4f289c43a8792a465fa0e7d, type: 3}
+  PublisherColour: {r: 0, g: 0.1387968, b: 1, a: 1}
+  AuthorColour: {r: 1, g: 0.45740873, b: 0, a: 1}
+  DateColour: {r: 0.9786186, g: 1, b: 0, a: 1}
 --- !u!1 &875827094
 GameObject:
   m_ObjectHideFlags: 0
@@ -5339,6 +5343,10 @@ PrefabInstance:
     - target: {fileID: 8253653954335732383, guid: 30d1dbbf81466ac44bc698435de904bc, type: 3}
       propertyPath: m_Name
       value: FilterMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253653954335732383, guid: 30d1dbbf81466ac44bc698435de904bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30d1dbbf81466ac44bc698435de904bc, type: 3}

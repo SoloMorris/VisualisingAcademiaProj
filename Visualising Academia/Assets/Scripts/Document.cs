@@ -86,37 +86,19 @@ public class DocNode : MonoBehaviour
     /// <summary>
     /// Any nodes spawned by this node.
     /// </summary>
-    private List<DocNode> children;
+    private List<DocNode> children = new List<DocNode>();
 
     /// <summary>
     /// Any Connections that have this Node set as target. Will always have parent at 0.
     /// </summary>
-    public List<NodeConnection> incomingConnections;
+    public List<NodeConnection> incomingConnections = new List<NodeConnection>();
 
 
     /// <summary>
     /// Connections going to children or other related nodes.
     /// </summary>
-    public List<NodeConnection> outgoingConnections;
-
-
-    public DocNode(Document nData)
-    {
-        Data = nData;
-        Parent = null;
-        Children = new List<DocNode>();
-        incomingConnections = new List<NodeConnection>();
-        outgoingConnections = new List<NodeConnection>();
-    }
+    public List<NodeConnection> outgoingConnections = new List<NodeConnection>();
     
-    public DocNode(DocumentData nData)
-    {
-        ApplyDocumentData(nData);
-        Parent = null;
-        Children = new List<DocNode>();
-        incomingConnections = new List<NodeConnection>();
-        outgoingConnections = new List<NodeConnection>();
-    }
 
     public void ApplyDocumentData(DocumentData nData)
     {
@@ -177,11 +159,24 @@ public class NodeConnection : MonoBehaviour
     {
         connectionType = desiredType;
     }
-    
+
+    public void Create()
+    {
+        connection = Instantiate(connection, transform);
+        connection.SetPosition(0, origin.gameObject.transform.position);
+        connection.SetPosition(1, target.gameObject.transform.position);
+    }
+
+    public void UpdatePositions()
+    {
+        connection.SetPosition(0, origin.transform.position);
+        connection.SetPosition(1, target.transform.position);
+    }
     public bool IsConnectionOfType(ConnectionType desiredType)
     {
         return connectionType == desiredType;
     }
+
     public LineRenderer connection;
     public DocNode origin;
     public DocNode target;

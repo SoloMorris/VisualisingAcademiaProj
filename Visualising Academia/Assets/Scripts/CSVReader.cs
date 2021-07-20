@@ -40,6 +40,11 @@ public class CSVReader
                 }
                 entry[header[j]] = finalvalue;
             }
+
+            if (i == 390)
+            {
+                
+            }
             list.Add (entry);
         }
         return list;

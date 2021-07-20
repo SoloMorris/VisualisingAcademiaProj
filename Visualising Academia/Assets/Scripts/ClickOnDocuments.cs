@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +8,8 @@ public class ClickOnDocuments : MonoBehaviour
 {
 
     [SerializeField] private GameObject displayWindow;
-    private GameObject targetDoc;
     public LayerMask masks;
+    private GameObject TargetNode;
 
     void Update()
     {
@@ -28,18 +29,35 @@ public class ClickOnDocuments : MonoBehaviour
         if (hit.transform.gameObject.TryGetComponent(out Button but))
         {
             print("invoking");
+            ToggleConnectionDisplay(TargetNode.transform);
+            TargetNode = null;
             but.onClick.Invoke();
         }
         //  If we hit a document object, display the Popup Window
         else if (hit.transform.gameObject.TryGetComponent(out Document doc))
         {
             if (displayWindow.GetComponent<PopupDisplay>().TitleField.text == doc.Title.AttributeValue) return;
-            targetDoc = doc.gameObject;
             displayWindow.GetComponent<PopupDisplay>().CloseWindow();
             displayWindow.SetActive(true);
+            ToggleConnectionDisplay(hit.transform);
+            TargetNode = hit.transform.gameObject;
             displayWindow.GetComponent<PopupDisplay>().SetupField(doc);
         }
         
+    }
 
+    public void ToggleConnectionDisplay(Transform hit)
+    {
+        print("Foind a thing");
+        var node = hit.GetComponent<DocNode>();
+        foreach (var iCon in node.incomingConnections)
+        {
+            iCon.connection.enabled = !iCon.connection.enabled;
+        }
+
+        foreach (var oCon in node.outgoingConnections)
+        {
+            oCon.connection.enabled = !oCon.connection.enabled;
+        }
     }
 }

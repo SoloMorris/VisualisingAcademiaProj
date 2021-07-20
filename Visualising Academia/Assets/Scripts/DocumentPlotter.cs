@@ -33,8 +33,8 @@ public class DocumentPlotter : MonoBehaviour
     { 
         dataList = CSVReader.Read(inputFile);
 
-        // print(dataList);
-        //
+        //print(dataList.Count.ToString());
+        
          List<string> columnList = new List<string>(dataList[1].Keys);
          DocumentData plotter = new DocumentData(); // Map out the keys of the csv
          plotter.Url.SetAttributeValue(columnList[0]);
@@ -80,7 +80,7 @@ public class DocumentPlotter : MonoBehaviour
         }
 
          //Print out some docs to see if everything works!
-         // for (var i = 0; i < 5; i++)
+         // for (var i = 0; i < 50; i++)
          // {
          //     var art = articles[i];
          //     print(art.Title.AttributeValue +", " +art.Publisher.AttributeValue);
