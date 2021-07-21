@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Windows.WebCam;
 
 public class Visualiser : LateSetup
@@ -14,9 +15,54 @@ public class Visualiser : LateSetup
 
     [SerializeField] private LineRenderer lr;
 
-    public Color PublisherColour = Color.black;
-    public Color AuthorColour = Color.black;
-    public Color DateColour = Color.black;
+    Color PublisherColour = Color.black;
+    Color AuthorColour = Color.cyan;
+    Color DateColour = Color.blue;
+    public Dropdown Pubdropdown;
+    public Dropdown Authdropdown;
+    public Dropdown Datedropdown;
+
+    public void SelectColor()
+    {
+        Debug.Log("Working");
+        switch (Pubdropdown.value)
+        {
+            case 1:
+                PublisherColour = Color.red;
+                break;
+            case 2:
+                PublisherColour = Color.blue;
+                break;
+            case 3:
+                PublisherColour = Color.green;
+                break;
+        }
+        switch (Authdropdown.value)
+        {
+            case 1:
+                AuthorColour = Color.red;
+                break;
+            case 2:
+                AuthorColour = Color.blue;
+                break;
+            case 3:
+                AuthorColour = Color.green;
+                break;
+        }
+        switch (Datedropdown.value)
+        {
+            case 1:
+                DateColour = Color.red;
+                break;
+            case 2:
+                DateColour = Color.blue;
+                break;
+            case 3:
+                DateColour = Color.green;
+                break;
+        }
+    }
+
     private void Update()
     {
         if (!IsSetupComplete())
@@ -155,21 +201,18 @@ public class Visualiser : LateSetup
         switch (connection.connectionType)
         {
             case ConnectionType.Authors:
-                Debug.Log("working2");
                 connection.connection.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 connection.connection.startColor = AuthorColour;
                 connection.connection.endColor = AuthorColour;
                 connection.Create();
                 break;
             case ConnectionType.Date:
-                Debug.Log("working3");
                 connection.connection.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 connection.connection.startColor = DateColour;
                 connection.connection.endColor = DateColour;
                 connection.Create();
                 break;
             case ConnectionType.Publisher:
-                Debug.Log("working4");
                 connection.connection.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 connection.connection.startColor = PublisherColour;
                 connection.connection.endColor = PublisherColour;
