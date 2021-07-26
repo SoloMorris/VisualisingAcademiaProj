@@ -170,7 +170,7 @@ public class Visualiser : LateSetup
         else if (aData.Authors.AttributesList[0] != null && AreListsRelated(aData.Authors.AttributesList, bData.Authors.AttributesList))
             CreateNodeConnection(comparisonA, comparisonB, ConnectionType.Authors);
         else if (aData.DatePublished.AttributeValue != null && aData.DatePublished.AttributeValue == bData.DatePublished.AttributeValue)
-            CreateNodeConnection(comparisonA, comparisonB, ConnectionType.Authors);
+            CreateNodeConnection(comparisonA, comparisonB, ConnectionType.Date);
     }
 
     private void CreateNodeConnection(DocNode comparisonA, DocNode comparisonB, ConnectionType desiredConType)
@@ -181,7 +181,7 @@ public class Visualiser : LateSetup
         comparisonB.outgoingConnections.Add(originConnection);
         originConnection.SetConnectionType(desiredConType);
         ApplyLineSettings(ref originConnection);
-        originConnection.connection.enabled = false;
+        originConnection.connection.enabled = true;
         
     }
 
@@ -221,7 +221,6 @@ public class Visualiser : LateSetup
             case ConnectionType.Title:
                 break;
             
-                //TODO: This.
         }
     }
 }
