@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 using UnityEngine.Windows.WebCam;
 
@@ -19,6 +21,8 @@ public class Visualiser : LateSetup
     private List<Network> nodeNetworks = new List<Network>(); // New way to store nodes.
     [SerializeField] private GameObject NetworkPrefab;
 
+    
+    private List<GameObject> generatedNodes = new List<GameObject>(); // Used to keep track of generated nodes for multiple generations
     //  Relation Colours
     Color PublisherColour = Color.black;
     Color AuthorColour = Color.cyan;
@@ -111,36 +115,49 @@ public class Visualiser : LateSetup
 
     private void CreateMatches()
     {
+        OriginNode.GetComponent<SphereCollider>().enabled = false;
         foreach (var match in DocumentPlotter.Instance.articles)
         {
             if (!IsRelated(match, OriginNode.Data.docData)) continue;
 
-            //  Instantiate the object and attach the document data to it
-            var newObj = Instantiate(DocumentObj, Vector3.zero, transform.rotation);
-            var comp = newObj.AddComponent<DocNode>();
-            comp.ApplyDocumentData(match);
+            CheckIfNodeExists(match);
+        }
+
+        foreach (var obj in generatedNodes)
+        {
+            var node = obj.GetComponent<DocNode>();
+            //  If the node isn't related, leave it disabled
+            if (!IsRelated(node.Data.docData, OriginNode.Data.docData))
+            {
+                obj.SetActive(false);
+                continue;
+            }
 
             //  Finds the relation between the new node and the Origin.
-            CompareNodes(comp, OriginNode);
+            CompareNodes(node, OriginNode);
             TryAddToNodeNetwork();
+
             void TryAddToNodeNetwork()
             {
                 foreach (var network in nodeNetworks)
                 {
-                    if (network.RelationToOrigin == comp.incomingConnections[0].connectionType)
+                    if (network.RelationToOrigin == node.incomingConnections[0].connectionType)
                     {
                         foreach (var nw in nodeNetworks)
                         {
-                            if (nw.Nodes.Contains(newObj.GetComponent<DocNode>()) && nw != network) return;
+                            if (nw.Nodes.Contains(obj.GetComponent<DocNode>()) && nw != network) return;
                         }
-                        network.Nodes.Add(newObj.GetComponent<DocNode>());
+
+                        network.Nodes.Add(obj.GetComponent<DocNode>());
                         return;
                     }
                 }
-                var newNetwork = Instantiate(NetworkPrefab, Random.insideUnitSphere * 40, transform.rotation);
-                newNetwork.GetComponent<Network>().SetRelationToOrigin(newObj.GetComponent<DocNode>().incomingConnections[0].connectionType);
+
+                var newNetwork = Instantiate(NetworkPrefab, Random.insideUnitSphere * 50, transform.rotation);
+                newNetwork.GetComponent<Network>()
+                    .SetRelationToOrigin(obj.GetComponent<DocNode>().incomingConnections[0].connectionType);
                 nodeNetworks.Add(newNetwork.GetComponent<Network>());
-                nodeNetworks[nodeNetworks.Count-1].Nodes.Add(newObj.GetComponent<DocNode>());
+                nodeNetworks[nodeNetworks.Count - 1].Nodes.Add(obj.GetComponent<DocNode>());
             }
 
         }
@@ -154,6 +171,7 @@ public class Visualiser : LateSetup
                 {
                     foreach (DocNode otherNode in nodeNetworks[j].Nodes)
                     {
+                        if (nodeNetworks[j] == nodeNetworks[i]) continue;
                         CompareNodes(node, otherNode);
                     }
                 }
@@ -162,6 +180,33 @@ public class Visualiser : LateSetup
             nodeNetworks[i].RandomiseNodeLocations();
         }
         setupComplete = true;
+    }
+
+    private void CheckIfNodeExists(DocumentData match)
+    {
+        if (generatedNodes.Count > 0)
+        {
+            foreach (var entry in generatedNodes)
+            {
+                if (entry.GetComponent<DocNode>().Data.docData == match)
+                    return;
+            }
+
+            InstantiateNewNode(match);
+        }
+        else
+        {
+            InstantiateNewNode(match);
+        }
+    }
+
+    private void InstantiateNewNode(DocumentData match)
+    {
+        //  Instantiate the object and attach the document data to it
+        var newObj = Instantiate(DocumentObj, Vector3.zero, transform.rotation);
+        var comp = newObj.AddComponent<DocNode>();
+        comp.ApplyDocumentData(match);
+        generatedNodes.Add(newObj);
     }
 
     private bool AreListsRelated<T>(List<T> a, List<T> b)
@@ -248,5 +293,34 @@ public class Visualiser : LateSetup
                 break;
             
         }
+    }
+
+    public void GenerateNewNetwork(DocNode newOrigin)
+    {
+        if (newOrigin == OriginNode) return;
+        
+        //  Make the old OriginNode into a normal node
+        CheckIfNodeExists(OriginNode.Data.docData);
+        Destroy(OriginNode.gameObject);
+        
+        //  Make the normal node the new OriginNode
+        generatedNodes.Remove(newOrigin.gameObject);
+        OriginNode = newOrigin;
+        OriginNode.transform.parent = spawnPoint;
+        OriginNode.transform.position = spawnPoint.position;
+        OriginNode.incomingConnections.Clear();
+        OriginNode.outgoingConnections.Clear();
+        
+        foreach (var network in nodeNetworks)
+        {
+            network.Nodes.Clear();
+        }
+
+        for (int i = 0; i < generatedNodes.Count; i++)
+        {
+            generatedNodes[i].GetComponent<DocNode>().incomingConnections.Clear();
+            generatedNodes[i].GetComponent<DocNode>().outgoingConnections.Clear();
+        }
+        CreateMatches();
     }
 }
