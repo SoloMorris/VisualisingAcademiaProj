@@ -23,6 +23,13 @@ public class PopupDisplay : MonoBehaviour
             AuthorField.text += newData.Authors.AttributesList[i];
             if (newData.Authors.AttributesList.Count > i + 1)
                 AuthorField.text += ", ";
+            
+            //  Temporary fix as long author lists will overflow in the UI
+            // if (i >= 1)
+            // {
+            //     AuthorField.text += "et al";
+            //     break;
+            // }
         }
         DateField.text = newData.DatePublished.AttributeValue;
         isPartofField.text = newData.IsPartOf.AttributeValue;

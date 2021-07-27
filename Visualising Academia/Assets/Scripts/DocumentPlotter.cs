@@ -40,9 +40,9 @@ public class DocumentPlotter : MonoBehaviour
          plotter.Url.SetAttributeValue(columnList[0]);
          plotter.Title.SetAttributeValue(columnList[1]);
          plotter.IsPartOf.SetAttributeValue(columnList[2]);
+         plotter.DatePublished.SetAttributeValue(columnList[3]);
          plotter.Doi.SetAttributeValue(columnList[4]);
          plotter.DocumentType.SetAttributeValue(columnList[5]);
-         plotter.DatePublished.SetAttributeValue(columnList[7]);
          string authours = columnList[11];
          plotter.Publisher.SetAttributeValue(columnList[12]);
          plotter.Language.SetAttributeValue(columnList[13]);
@@ -50,7 +50,8 @@ public class DocumentPlotter : MonoBehaviour
          for (int i = 0; i < dataList.Count - 1; i++)
         {
             DocumentData newDoc = new DocumentData();
-            
+
+            //print(dataList[i][plotter.Title.AttributeValue]);
             newDoc.Title.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.Title.AttributeValue]));
             newDoc.Language.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.Language.AttributeValue]));
             newDoc.IsPartOf.SetAttributeValue(System.Convert.ToString(dataList[i][plotter.IsPartOf.AttributeValue]));

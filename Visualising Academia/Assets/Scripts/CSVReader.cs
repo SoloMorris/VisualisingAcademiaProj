@@ -30,6 +30,7 @@ public class CSVReader
             for(var j=0; j < header.Length && j < values.Length; j++ ) {
                 string value = values[j];
                 value = value.TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("\\", "");
+                value = value.TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("・", "");
                 object finalvalue = value;
                 int n;
                 float f;
@@ -39,11 +40,6 @@ public class CSVReader
                     finalvalue = f;
                 }
                 entry[header[j]] = finalvalue;
-            }
-
-            if (i == 390)
-            {
-                
             }
             list.Add (entry);
         }
