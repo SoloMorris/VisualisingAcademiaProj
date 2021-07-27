@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8505761773035816396}
   - component: {fileID: 7091197574702218978}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: NodeEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

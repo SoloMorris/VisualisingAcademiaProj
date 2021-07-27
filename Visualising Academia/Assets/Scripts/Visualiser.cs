@@ -8,19 +8,37 @@ using UnityEngine.Windows.WebCam;
 
 public class Visualiser : LateSetup
 {
-    private List<List<DocumentData>> branches = new List<List<DocumentData>>();
+
     [SerializeField] private GameObject DocumentObj;
     [HideInInspector] public Transform spawnPoint;
-    private List<DocNode> instances = new List<DocNode>();
+    //private List<DocNode> instances = new List<DocNode>(); // Is being transitioned over to nodeNetworks
 
     [SerializeField] private LineRenderer lr;
+    
+    // Networks to contain nodes
+    private List<Network> nodeNetworks = new List<Network>(); // New way to store nodes.
+    [SerializeField] private GameObject NetworkPrefab;
 
+    //  Relation Colours
     Color PublisherColour = Color.black;
     Color AuthorColour = Color.cyan;
     Color DateColour = Color.blue;
+    
+    // Optimisation
+    [SerializeField] private float updateTimer;
+    private float tick = 0f;
+    
     public Dropdown Pubdropdown;
     public Dropdown Authdropdown;
     public Dropdown Datedropdown;
+    
+        /* //---------------------------------------------------------------------------------------------------------//
+        Split all nodes into groups called networks                                                                   |
+        Each network instantiates separately based on the type of relation to the Origin Node.                        |
+        This way, relations to the origin are kept separate, and would allow for implementation of a feature for      |
+        the user to change the Origin Node and generate new networks                                                  |
+        Potentially only visualise connections if they differ from the type the node already shares with the origin   |
+        */ //--------------------------------------------------------------------------------------------------------| 
 
     public void SelectColor()
     {
@@ -69,13 +87,22 @@ public class Visualiser : LateSetup
             CreateMatches();
         else
         {
-            foreach (var inst in instances)
-            {
-                foreach (var con in inst.incomingConnections)
+            tick++;
+            if (tick < updateTimer) return;
+
+            var networkChoice = Random.Range(0, nodeNetworks.Count);
+            foreach (DocNode node in nodeNetworks[networkChoice].Nodes)
                 {
-                    con.UpdatePositions();
+                    foreach (var con in node.incomingConnections)
+                    {
+                        con.UpdatePositions();
+                    }
+                    foreach (var con in node.outgoingConnections)
+                    {
+                        con.UpdatePositions();
+                    }
                 }
-            }
+            tick = 0f;
         }
 
     }
@@ -87,61 +114,53 @@ public class Visualiser : LateSetup
         foreach (var match in DocumentPlotter.Instance.articles)
         {
             if (!IsRelated(match, OriginNode.Data.docData)) continue;
-            
-            // Generate random offsets in space for each object
-            var offsetA = Random.Range(-5f, 5f);
-            var offsetB = Random.Range(-5f, 5f);
-            var offsetC = Random.Range(-5f, 5f);
-            var spawnOffset = new Vector3(spawnPoint.position.x + offsetA, spawnPoint.position.y + offsetB,
-                spawnPoint.position.z + offsetC);
-            
+
             //  Instantiate the object and attach the document data to it
-            var newObj = Instantiate(DocumentObj, spawnOffset, spawnPoint.rotation);
+            var newObj = Instantiate(DocumentObj, Vector3.zero, transform.rotation);
             var comp = newObj.AddComponent<DocNode>();
             comp.ApplyDocumentData(match);
-            //link.relatedDocuments.Add(CompletedSearch.OriginDocument);
-            
-            // Connect the new Node to the Origin
-            
-            
-            
-            //  Finds this document inside the search query's list of relations, so that it can be displayed
-           // var index = CompletedSearch.Query.matches.FindIndex(0, CompletedSearch.Query.matches.Count,
-           //     data => data.Title == comp.docData.Title);
-           // link.relationTypes.Add(CompletedSearch.Query.matchName[index]);
-            
-           CompareNodes(comp, OriginNode);
-            instances.Add(newObj.GetComponent<DocNode>());
 
-        }
-
-        foreach (var match in instances)
-        {
-            // foreach (var inst in instances)
-            // {
-            //     var docA = match.GetComponent<Document>();
-            //     var docB = inst.GetComponent<Document>();
-            //     if (docA.Publisher.AttributeValue == docB.Publisher.AttributeValue)
-            //     {
-            //         match.GetComponent<LinkToParent>().relatedDocuments.Add(docB);
-            //     }
-            //
-            //     if (AreListsRelated(docA.Authors.AttributesList, docB.Authors.AttributesList))
-            //     {
-            //         match.GetComponent<LinkToParent>().relatedDocuments.Add(docB);
-            //     }
-            //
-            //     if (docA.DatePublished.AttributeValue == docB.DatePublished.AttributeValue)
-            //     {
-            //         match.GetComponent<LinkToParent>().relatedDocuments.Add(docB);
-            //     }
-            // }
-            foreach (var inst in instances)
+            //  Finds the relation between the new node and the Origin.
+            CompareNodes(comp, OriginNode);
+            TryAddToNodeNetwork();
+            void TryAddToNodeNetwork()
             {
-                CompareNodes(match, inst);
+                foreach (var network in nodeNetworks)
+                {
+                    if (network.RelationToOrigin == comp.incomingConnections[0].connectionType)
+                    {
+                        foreach (var nw in nodeNetworks)
+                        {
+                            if (nw.Nodes.Contains(newObj.GetComponent<DocNode>()) && nw != network) return;
+                        }
+                        network.Nodes.Add(newObj.GetComponent<DocNode>());
+                        return;
+                    }
+                }
+                var newNetwork = Instantiate(NetworkPrefab, Random.insideUnitSphere * 40, transform.rotation);
+                newNetwork.GetComponent<Network>().SetRelationToOrigin(newObj.GetComponent<DocNode>().incomingConnections[0].connectionType);
+                nodeNetworks.Add(newNetwork.GetComponent<Network>());
+                nodeNetworks[nodeNetworks.Count-1].Nodes.Add(newObj.GetComponent<DocNode>());
             }
+
         }
 
+        // Go through the completed networks and find relations between everything else
+        for (int i = 0; i < nodeNetworks.Count; i++)
+        {
+            foreach (DocNode node in nodeNetworks[i].Nodes)
+            {
+                for (int j = 0; j < nodeNetworks.Count; j++)
+                {
+                    foreach (DocNode otherNode in nodeNetworks[j].Nodes)
+                    {
+                        CompareNodes(node, otherNode);
+                    }
+                }
+                node.transform.parent = nodeNetworks[i].transform;
+            }
+            nodeNetworks[i].RandomiseNodeLocations();
+        }
         setupComplete = true;
     }
 
@@ -157,13 +176,17 @@ public class Visualiser : LateSetup
 
     private void CompareNodes(DocNode comparisonA, DocNode comparisonB)
     {
-        var aData = comparisonA.Data;
-        var bData = comparisonB.Data;
-        
+        // If these two nodes are the same, exit
+        if (comparisonA.Equals(comparisonB)) return;
+
+        // If these two nodes already have a connection, then exit
         if (comparisonA.GetComponent<NodeConnection>() &&
             comparisonA.GetComponent<NodeConnection>().origin == comparisonB
             || comparisonA.GetComponent<NodeConnection>() &&
             comparisonA.GetComponent<NodeConnection>().target == comparisonB) return;
+        
+        var aData = comparisonA.Data;
+        var bData = comparisonB.Data;
         
         if (aData.Publisher.AttributeValue != null && aData.Publisher.AttributeValue == bData.Publisher.AttributeValue)
             CreateNodeConnection(comparisonA, comparisonB, ConnectionType.Publisher);
@@ -181,12 +204,15 @@ public class Visualiser : LateSetup
         comparisonB.outgoingConnections.Add(originConnection);
         originConnection.SetConnectionType(desiredConType);
         ApplyLineSettings(ref originConnection);
-        originConnection.connection.enabled = true;
+        originConnection.connection.enabled = false;
         
     }
 
     private bool IsRelated(DocumentData source, DocumentData comparison)
     {
+        //  Return if the Title, Publisher or Date are similar.
+        if (source.Title.AttributeValue != null &&
+            source.Title.AttributeValue == comparison.Title.AttributeValue) return true;
         if (source.Publisher.AttributeValue != null &&
             source.Publisher.AttributeValue == comparison.Publisher.AttributeValue) return true;
         if (AreListsRelated(source.Authors.AttributesList, comparison.Authors.AttributesList)) return true;

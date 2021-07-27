@@ -154,7 +154,8 @@ public class NodeConnection : MonoBehaviour
         origin = nOrigin;
         target = nTarget;
     }
-    public ConnectionType connectionType { get; private set; }
+
+    public ConnectionType connectionType;
     public void SetConnectionType(ConnectionType desiredType)
     {
         connectionType = desiredType;

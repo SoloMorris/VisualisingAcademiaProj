@@ -23,13 +23,13 @@ public class ClickOnDocuments : MonoBehaviour
         if (!Input.GetMouseButtonDown(0)) return;
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out hit, 100f, masks)) return;
+        if (!Physics.Raycast(ray, out hit, 300f, masks, QueryTriggerInteraction.Collide)) return;
         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.blue, 100f);
         //  If we hit a button, execute whatever function it's connected to
         if (hit.transform.gameObject.TryGetComponent(out Button but))
         {
             print("invoking");
-            //ToggleConnectionDisplay(TargetNode.transform);
+            ToggleConnectionDisplay(TargetNode.transform);
             TargetNode = null;
             but.onClick.Invoke();
         }
@@ -39,7 +39,7 @@ public class ClickOnDocuments : MonoBehaviour
             if (displayWindow.GetComponent<PopupDisplay>().TitleField.text == doc.Title.AttributeValue) return;
             displayWindow.GetComponent<PopupDisplay>().CloseWindow();
             displayWindow.SetActive(true);
-            //ToggleConnectionDisplay(hit.transform);
+            ToggleConnectionDisplay(hit.transform);
             TargetNode = hit.transform.gameObject;
             displayWindow.GetComponent<PopupDisplay>().SetupField(doc);
         }
