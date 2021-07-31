@@ -181,4 +181,5 @@ public class NodeConnection : MonoBehaviour
     public LineRenderer connection;
     public DocNode origin;
     public DocNode target;
+    public bool visible = true;
 }

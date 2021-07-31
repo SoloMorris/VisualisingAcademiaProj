@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
-
+using NodeNetwork;
 public class SearchHandler : MonoBehaviour
 {
    private UserSearchInterface search;
