@@ -286,6 +286,11 @@ namespace NodeNetwork
             return false;
         }
 
+        private void ApplySphereColor(ref NodeConnection connection)
+        {
+
+        }
+
         private void ApplyLineSettings(ref NodeConnection connection)
         {
             //Debug.Log("working1");
