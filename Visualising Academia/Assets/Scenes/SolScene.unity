@@ -1931,6 +1931,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 908739783, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 862938462}
+    - target: {fileID: 908739783, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 908739783, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NodeNetwork.Visualiser, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 986995673, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 862938462}
+    - target: {fileID: 986995673, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 986995673, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NodeNetwork.Visualiser, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1654132846, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 862938462}
+    - target: {fileID: 1654132846, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1654132846, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NodeNetwork.Visualiser, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1397069678159237573, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
