@@ -399,7 +399,7 @@ namespace NodeNetwork
                                 
                                 //  If the node is inside this network and doesn't share connection types
                                 //  WITH the network, make it visible
-                                if (network.Nodes.Contains(con.origin) && !con.IsConnectionOfType(network.RelationToOrigin))
+                                if (!con.IsConnectionOfType(network.RelationToOrigin))
                                     con.visible = true;
                                 else
                                     con.visible = false;
@@ -407,8 +407,8 @@ namespace NodeNetwork
 
                             foreach (var con in node.outgoingConnections)
                             {
-                                if (!network.Nodes.Contains(con.origin)) continue;
-                                if (network.Nodes.Contains(con.origin) && !con.IsConnectionOfType(network.RelationToOrigin))
+                                if (!network.Nodes.Contains(con.target)) continue;
+                                if (!con.IsConnectionOfType(network.RelationToOrigin))
                                     con.visible = true;
                                 else
                                     con.visible = false;
@@ -449,7 +449,6 @@ namespace NodeNetwork
                     if (node.Equals(desiredNode)) return network;
                 }
             }
-            Debug.LogError("Could not find desired Node in existing networks.");
             return null;
         }
 

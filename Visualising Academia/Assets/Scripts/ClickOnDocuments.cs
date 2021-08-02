@@ -76,31 +76,50 @@ public class ClickOnDocuments : MonoBehaviour
         if (options.ViewAllConnections) return;
         
         var node = hit.GetComponent<DocNode>();
-        foreach (var iCon in node.incomingConnections)
+        
+        //  First, check if this is the OriginNode, it it is execute this separately and exit
+        if (visualiser.FindNetworkContainsNode(node) == null)
         {
-            if (!iCon.visible)
+            foreach (var oCon in node.outgoingConnections)
             {
-                iCon.connection.enabled = false;
-                continue;
+                oCon.connection.enabled = !oCon.connection.enabled;
             }
 
-            if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
-                iCon.connection.enabled = !iCon.connection.enabled;
-            else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == iCon.connectionType)
-                iCon.connection.enabled = !iCon.connection.enabled;
+            foreach (var inCon in node.incomingConnections)
+            {
+                inCon.connection.enabled = !inCon.connection.enabled;
+            }
         }
-
-        foreach (var oCon in node.outgoingConnections)
+        else
         {
-            if (!oCon.visible)
+            //  If this isn't the originNode, execute as normal
+            foreach (var iCon in node.incomingConnections)
             {
-                oCon.connection.enabled = false;
-                continue;
+                if (!iCon.visible)
+                {
+                    iCon.connection.enabled = false;
+                    continue;
+                }
+
+                if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
+                    iCon.connection.enabled = !iCon.connection.enabled;
+                else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == iCon.connectionType)
+                    iCon.connection.enabled = !iCon.connection.enabled;
             }
-            if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
-                oCon.connection.enabled = !oCon.connection.enabled;
-            else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == oCon.connectionType)
-                oCon.connection.enabled = !oCon.connection.enabled;
+
+            foreach (var oCon in node.outgoingConnections)
+            {
+                if (!oCon.visible)
+                {
+                    oCon.connection.enabled = false;
+                    continue;
+                }
+
+                if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
+                    oCon.connection.enabled = !oCon.connection.enabled;
+                else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == oCon.connectionType)
+                    oCon.connection.enabled = !oCon.connection.enabled;
+            }
         }
 
         viewingState = !viewingState;
