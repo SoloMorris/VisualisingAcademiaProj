@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using NodeNetwork;
+using Cursor = UnityEngine.Cursor;
+
 public class SearchHandler : MonoBehaviour
 {
    private UserSearchInterface search;
@@ -28,8 +30,12 @@ public class SearchHandler : MonoBehaviour
       {
          searchMenuCanvas.SetActive(false);
       }
+
       if (search.searchComplete && !visualiser.isActiveAndEnabled)
+      {
          EnableVisualiserScript();
+         Cursor.lockState = CursorLockMode.Locked;
+      }
    }
 
    public void EnableFilterScript()
