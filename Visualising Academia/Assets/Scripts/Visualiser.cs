@@ -131,8 +131,38 @@ namespace NodeNetwork
                     break;
 
             }
+            SetColourOfType(ConnectionType.Date, DateColour);
+            SetColourOfType(ConnectionType.Publisher, PublisherColour);
+            SetColourOfType(ConnectionType.Authors, AuthorColour);
         }
 
+        private void SetColourOfType(ConnectionType type, Color newColour)
+        {
+            foreach (var network in nodeNetworks)
+            {
+                foreach (var node in network.Nodes)
+                {
+                    foreach (var inCon in node.incomingConnections)
+                    {
+                        if (inCon.IsConnectionOfType(type))
+                        {
+                            inCon.connection.startColor = newColour;
+                            inCon.connection.endColor = newColour;
+                        }
+
+                    }
+
+                    foreach (var oCon in node.outgoingConnections)
+                    {
+                        if (oCon.IsConnectionOfType(type))
+                        {
+                            oCon.connection.startColor = newColour;
+                            oCon.connection.endColor = newColour;
+                        }
+                    }
+                }
+            }
+        }
         private void Update()
         {
             if (!IsSetupComplete())

@@ -2051,6 +2051,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3713415738654239719, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Size.x
+      value: 492.13147
+      objectReference: {fileID: 0}
+    - target: {fileID: 3713415738654239719, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Size.y
+      value: 39.774857
+      objectReference: {fileID: 0}
+    - target: {fileID: 3713415738654239719, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Center.x
+      value: -0.8742714
+      objectReference: {fileID: 0}
+    - target: {fileID: 3713415738654239719, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Center.y
+      value: -1.1014557
+      objectReference: {fileID: 0}
     - target: {fileID: 4040132104492063951, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
       propertyPath: m_Name
       value: OptionsMenu
@@ -2063,6 +2079,38 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 227300613}
+    - target: {fileID: 6825903781449048662, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Size.x
+      value: 486.98367
+      objectReference: {fileID: 0}
+    - target: {fileID: 6825903781449048662, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Size.y
+      value: 43.09208
+      objectReference: {fileID: 0}
+    - target: {fileID: 6825903781449048662, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Center.x
+      value: -0.65755844
+      objectReference: {fileID: 0}
+    - target: {fileID: 6825903781449048662, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Center.y
+      value: -1.2303734
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230642609171815007, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Size.x
+      value: 483.64566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230642609171815007, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Size.y
+      value: 41.332016
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230642609171815007, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Center.x
+      value: 1.00214
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230642609171815007, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
+      propertyPath: m_Center.y
+      value: -0.25032043
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25949fa0eb178d742839b0784d7c1dea, type: 3}
 --- !u!114 &1654132846 stripped
