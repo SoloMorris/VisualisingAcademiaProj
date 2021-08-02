@@ -1013,6 +1013,7 @@ GameObject:
   - component: {fileID: 908739786}
   - component: {fileID: 908739785}
   - component: {fileID: 908739783}
+  - component: {fileID: 3713415738654239719}
   m_Layer: 5
   m_Name: Dropdown DateColor
   m_TagString: Untagged
@@ -1161,6 +1162,19 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 1
   m_AlphaFadeSpeed: 0.15
+--- !u!65 &3713415738654239719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908739782}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 231.3977, y: 26.534624, z: 1}
+  m_Center: {x: -0.3346634, y: 0.21452427, z: 0}
 --- !u!1 &958978409
 GameObject:
   m_ObjectHideFlags: 0
@@ -1281,6 +1295,7 @@ GameObject:
   - component: {fileID: 986995675}
   - component: {fileID: 986995674}
   - component: {fileID: 986995673}
+  - component: {fileID: 6825903781449048662}
   m_Layer: 5
   m_Name: Dropdown PublisherColor
   m_TagString: Untagged
@@ -1429,6 +1444,19 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 1
   m_AlphaFadeSpeed: 0.15
+--- !u!65 &6825903781449048662
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986995671}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 231.3977, y: 26.534624, z: 1}
+  m_Center: {x: -0.3346634, y: 0.21452427, z: 0}
 --- !u!1 &989657797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2629,6 +2657,7 @@ GameObject:
   - component: {fileID: 1654132845}
   - component: {fileID: 1654132844}
   - component: {fileID: 1654132846}
+  - component: {fileID: 7230642609171815007}
   m_Layer: 5
   m_Name: Dropdown AuthorColor
   m_TagString: Untagged
@@ -2777,6 +2806,19 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 1
   m_AlphaFadeSpeed: 0.15
+--- !u!65 &7230642609171815007
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654132842}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 231.3977, y: 26.534624, z: 1}
+  m_Center: {x: -0.3346634, y: 0.21452427, z: 0}
 --- !u!1 &1662599328
 GameObject:
   m_ObjectHideFlags: 0
@@ -3804,7 +3846,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &3679278099136088476
 MonoBehaviour:
   m_ObjectHideFlags: 0

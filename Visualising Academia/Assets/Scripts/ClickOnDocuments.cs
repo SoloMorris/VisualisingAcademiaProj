@@ -49,8 +49,12 @@ public class ClickOnDocuments : MonoBehaviour
             displayWindow.SetActive(true);
             displayWindow.GetComponent<PopupDisplay>().SetupField(doc);
         }
-        
-    }
+        else if (hit.transform.gameObject.TryGetComponent(out Dropdown drop))
+            drop.OnPointerClick(null);
+        else if (hit.transform.gameObject.TryGetComponent(out Toggle tog))
+            tog.OnPointerClick(null);
+
+        }
 
     /// <summary>
     /// If the user presses Space, generate a new network
