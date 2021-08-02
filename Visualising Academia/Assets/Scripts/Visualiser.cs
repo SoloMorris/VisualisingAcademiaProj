@@ -67,6 +67,18 @@ namespace NodeNetwork
                 case 3:
                     PublisherColour = Color.green;
                     break;
+                case 4:
+                    PublisherColour = Color.cyan;
+                    break;
+                case 5:
+                    PublisherColour = Color.white;
+                    break;
+                case 6:
+                    PublisherColour = Color.yellow;
+                    break;
+                case 7:
+                    PublisherColour = Color.black;
+                    break;
             }
 
             switch (Authdropdown.value)
@@ -79,6 +91,18 @@ namespace NodeNetwork
                     break;
                 case 3:
                     AuthorColour = Color.green;
+                    break;
+                case 4:
+                    AuthorColour = Color.cyan;
+                    break;
+                case 5:
+                    AuthorColour = Color.white;
+                    break;
+                case 6:
+                    AuthorColour = Color.yellow;
+                    break;
+                case 7:
+                    AuthorColour = Color.black;
                     break;
             }
 
@@ -93,6 +117,19 @@ namespace NodeNetwork
                 case 3:
                     DateColour = Color.green;
                     break;
+                case 4:
+                    DateColour = Color.cyan;
+                    break;
+                case 5:
+                    DateColour = Color.white;
+                    break;
+                case 6:
+                    DateColour = Color.yellow;
+                    break;
+                case 7:
+                    DateColour = Color.black;
+                    break;
+
             }
         }
 
@@ -288,8 +325,14 @@ namespace NodeNetwork
 
         private void ApplySphereColor(ref NodeConnection connection)
         {
+            switch (connection.connectionType) 
+            {
+                case ConnectionType.Authors:
 
+                    break;
+            }
         }
+
 
         private void ApplyLineSettings(ref NodeConnection connection)
         {
