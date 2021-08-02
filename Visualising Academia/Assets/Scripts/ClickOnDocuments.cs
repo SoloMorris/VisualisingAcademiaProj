@@ -29,21 +29,8 @@ public class ClickOnDocuments : MonoBehaviour
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (!Physics.Raycast(ray, out hit, 300f, UIMask, QueryTriggerInteraction.Collide))
-            {
-                //  See if the player was trying to click the options menu instead
-                LayerMask optionsMask = LayerMask.NameToLayer("OptionsMenu");
-                if (!Physics.Raycast(ray, out hit, 500f, optionsMask, QueryTriggerInteraction.Collide))
-                {
-                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red, 300f);
-
-                    return;
-                }
-
-                print("hit options menu");
-                Cursor.lockState = CursorLockMode.Confined;
                 return;
-            }
-
+            
             print("Hit ui");
             Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.blue, 300f);
 
