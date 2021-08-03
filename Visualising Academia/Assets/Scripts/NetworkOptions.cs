@@ -70,7 +70,9 @@ namespace NodeNetwork
 
         private void Update()
         {
-
+            if (visualiser.internalNodesSet) return;
+            InternalNetworkView = InternalNetworkConnections.OFF;
+            textField.text = "Off";
         }
 
         public void HandleNetworkConnections()

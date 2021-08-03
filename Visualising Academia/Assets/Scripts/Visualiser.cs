@@ -30,12 +30,12 @@ namespace NodeNetwork
             generatedNodes = new List<GameObject>(); // Used to keep track of generated nodes for multiple generations
 
         //  Relation Colours
-        Color PublisherColour = Color.black;
-        Color AuthorColour = Color.cyan;
-        Color DateColour = Color.blue;
-        Color SpherePublisherColour = Color.cyan;
-        Color SphereAuthorColour = Color.black;
-        Color SphereDateColour = Color.blue;
+        Color PublisherColour = Color.green;
+        Color AuthorColour = Color.red;
+        Color DateColour = Color.yellow;
+        Color SpherePublisherColour = Color.green;
+        Color SphereAuthorColour = Color.red;
+        Color SphereDateColour = Color.yellow;
 
         // Optimisation
         [SerializeField] private float updateTimer;
@@ -222,9 +222,7 @@ namespace NodeNetwork
             //SetColourOfType(ConnectionType.Authors, SphereAuthorColour);
             ApplySphereColor();
         }
-
-
-
+        
         private void SetColourOfType(ConnectionType type, Color newColour)
         {
             foreach (var network in nodeNetworks)
@@ -351,6 +349,7 @@ namespace NodeNetwork
                 nodeNetworks[i].RandomiseNodeLocations();
             }
             ApplySphereColor();
+            spawnPoint.GetComponentInChildren<ParticleSystem>().Play();
             setupComplete = true;
         }
 
@@ -501,6 +500,8 @@ namespace NodeNetwork
 
             //  Make the old OriginNode into a normal node
             CheckIfNodeExists(OriginNode.Data.docData);
+            OriginNode.incomingConnections.Clear();
+            OriginNode.outgoingConnections.Clear();
             Destroy(OriginNode.gameObject);
 
             //  Make the normal node the new OriginNode
@@ -568,29 +569,22 @@ namespace NodeNetwork
                   SetAllNodesInNetwork(false);
                     break;
                 case NetworkOptions.InternalNetworkConnections.UNIQUE:
+                    SetAllNodesInNetwork(true);
                     foreach (var network in nodeNetworks)
                     {
                         foreach (var node in network.Nodes)
                         {
                             foreach (var con in node.incomingConnections)
                             {
-                                //  If the node isn't inside this network, ignore it.
-                                if (!network.Nodes.Contains(con.origin)) continue;
-                                
                                 //  If the node is inside this network and doesn't share connection types
                                 //  WITH the network, make it visible
-                                if (!con.IsConnectionOfType(network.RelationToOrigin))
-                                    con.visible = true;
-                                else
+                                if (con.IsConnectionOfType(network.RelationToOrigin) && network.Nodes.Contains(con.origin))
                                     con.visible = false;
                             }
 
                             foreach (var con in node.outgoingConnections)
                             {
-                                if (!network.Nodes.Contains(con.target)) continue;
-                                if (!con.IsConnectionOfType(network.RelationToOrigin))
-                                    con.visible = true;
-                                else
+                                if (con.IsConnectionOfType(network.RelationToOrigin) && network.Nodes.Contains(con.target))
                                     con.visible = false;
                             }
                         }

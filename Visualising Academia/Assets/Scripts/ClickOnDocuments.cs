@@ -86,9 +86,11 @@ public class ClickOnDocuments : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             if (TargetNode == null) return;
-            ToggleConnectionDisplay(TargetNode.transform);
+            ToggleConnectionDisplay(TargetNode.transform, false);
             displayWindow.GetComponent<PopupDisplay>().CloseWindow();
             visualiser.GenerateNewNetwork(TargetNode.GetComponent<DocNode>());
+            TargetNode = null;
+
         }
 
      
@@ -99,7 +101,7 @@ public class ClickOnDocuments : MonoBehaviour
         ToggleConnectionDisplay(TargetNode.transform);
         TargetNode = null;
     }
-    public void ToggleConnectionDisplay(Transform hit)
+    public void ToggleConnectionDisplay(Transform hit, bool clearTarget = true)
     {
         if (options.ViewAllConnections) return;
         
@@ -108,6 +110,7 @@ public class ClickOnDocuments : MonoBehaviour
         //  First, check if this is the OriginNode, it it is execute this separately and exit
         if (visualiser.FindNetworkContainsNode(node) == null)
         {
+            print("Printing for origin node");
             foreach (var oCon in node.outgoingConnections)
             {
                 oCon.connection.enabled = !oCon.connection.enabled;
@@ -123,35 +126,34 @@ public class ClickOnDocuments : MonoBehaviour
             //  If this isn't the originNode, execute as normal
             foreach (var iCon in node.incomingConnections)
             {
-                if (!iCon.visible)
+                if (iCon.visible)
+                    iCon.connection.enabled = !iCon.connection.enabled;
+                else
                 {
                     iCon.connection.enabled = false;
-                    continue;
                 }
-
-                if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
-                    iCon.connection.enabled = !iCon.connection.enabled;
-                else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == iCon.connectionType)
-                    iCon.connection.enabled = !iCon.connection.enabled;
             }
 
             foreach (var oCon in node.outgoingConnections)
             {
-                if (!oCon.visible)
+                if (oCon.visible)
+                {
+                    oCon.connection.enabled = !oCon.connection.enabled;
+                }
+                else
                 {
                     oCon.connection.enabled = false;
-                    continue;
                 }
 
-                if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
-                    oCon.connection.enabled = !oCon.connection.enabled;
-                else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == oCon.connectionType)
-                    oCon.connection.enabled = !oCon.connection.enabled;
+                // if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
+                //     oCon.connection.enabled = !oCon.connection.enabled;
+                // else if (visualiser.FindNetworkContainsNode(node).RelationToOrigin == oCon.connectionType)
+                //     oCon.connection.enabled = !oCon.connection.enabled;
             }
         }
 
         viewingState = !viewingState;
-        if (!viewingState)
+        if (!viewingState && clearTarget)
         {
             displayWindow.GetComponent<PopupDisplay>().CloseWindow();
             TargetNode = null;
