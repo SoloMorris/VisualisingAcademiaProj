@@ -14,6 +14,7 @@ public class SearchHandler : MonoBehaviour
    private Visualiser visualiser;
    [SerializeField] private Transform spawnPoint;
    [SerializeField] private GameObject searchMenuCanvas;
+   [SerializeField] private GameObject background;
    private void Awake()
    {
       search = GetComponentInChildren<UserSearchInterface>();
@@ -35,6 +36,7 @@ public class SearchHandler : MonoBehaviour
       {
          EnableVisualiserScript();
          Cursor.lockState = CursorLockMode.Locked;
+         background.SetActive(false);
       }
    }
 

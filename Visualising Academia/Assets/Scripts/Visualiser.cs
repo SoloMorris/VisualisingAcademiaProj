@@ -238,7 +238,6 @@ namespace NodeNetwork
                             inCon.connection.startColor = newColour;
                             inCon.connection.endColor = newColour;
                         }
-
                     }
 
                     foreach (var oCon in node.outgoingConnections)
