@@ -3833,7 +3833,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1664627228207854612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3886,3 +3886,6 @@ MonoBehaviour:
   Pubdropdown: {fileID: 0}
   Authdropdown: {fileID: 0}
   Datedropdown: {fileID: 0}
+  SpherePubdropdown: {fileID: 0}
+  SphereAuthdropdown: {fileID: 0}
+  SphereDatedropdown: {fileID: 0}

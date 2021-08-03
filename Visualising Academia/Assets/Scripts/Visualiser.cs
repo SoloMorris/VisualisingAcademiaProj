@@ -33,6 +33,9 @@ namespace NodeNetwork
         Color PublisherColour = Color.black;
         Color AuthorColour = Color.cyan;
         Color DateColour = Color.blue;
+        Color SpherePublisherColour = Color.cyan;
+        Color SphereAuthorColour = Color.black;
+        Color SphereDateColour = Color.blue;
 
         // Optimisation
         [SerializeField] private float updateTimer;
@@ -44,6 +47,9 @@ namespace NodeNetwork
         public Dropdown Pubdropdown;
         public Dropdown Authdropdown;
         public Dropdown Datedropdown;
+        public Dropdown SpherePubdropdown;
+        public Dropdown SphereAuthdropdown;
+        public Dropdown SphereDatedropdown;
 
         /* //---------------------------------------------------------------------------------------------------------//
         Split all nodes into groups called networks                                                                   |
@@ -55,7 +61,7 @@ namespace NodeNetwork
 
         public void SelectColor()
         {
-            Debug.Log("Working");
+            //Debug.Log("Working");
             switch (Pubdropdown.value)
             {
                 case 1:
@@ -134,7 +140,90 @@ namespace NodeNetwork
             SetColourOfType(ConnectionType.Date, DateColour);
             SetColourOfType(ConnectionType.Publisher, PublisherColour);
             SetColourOfType(ConnectionType.Authors, AuthorColour);
+
+
         }
+        public void SphereColor()
+        {
+            switch (SpherePubdropdown.value)
+            {
+                case 1:
+                    SpherePublisherColour = Color.red;
+                    break;
+                case 2:
+                    SpherePublisherColour = Color.blue;
+                    break;
+                case 3:
+                    SpherePublisherColour = Color.green;
+                    break;
+                case 4:
+                    SpherePublisherColour = Color.cyan;
+                    break;
+                case 5:
+                    SpherePublisherColour = Color.white;
+                    break;
+                case 6:
+                    SpherePublisherColour = Color.yellow;
+                    break;
+                case 7:
+                    SpherePublisherColour = Color.black;
+                    break;
+            }
+            switch (SphereAuthdropdown.value)
+            {
+                case 1:
+                    SphereAuthorColour = Color.red;
+                    break;
+                case 2:
+                    SphereAuthorColour = Color.blue;
+                    break;
+                case 3:
+                    SphereAuthorColour = Color.green;
+                    break;
+                case 4:
+                    SphereAuthorColour = Color.cyan;
+                    break;
+                case 5:
+                    SphereAuthorColour = Color.white;
+                    break;
+                case 6:
+                    SphereAuthorColour = Color.yellow;
+                    break;
+                case 7:
+                    SphereAuthorColour = Color.black;
+                    break;
+            }
+            switch (SphereDatedropdown.value)
+            {
+                case 1:
+                    SphereDateColour = Color.red;
+                    break;
+                case 2:
+                    SphereDateColour = Color.blue;
+                    break;
+                case 3:
+                    SphereDateColour = Color.green;
+                    break;
+                case 4:
+                    SphereDateColour = Color.cyan;
+                    break;
+                case 5:
+                    SphereDateColour = Color.white;
+                    break;
+                case 6:
+                    SphereDateColour = Color.yellow;
+                    break;
+                case 7:
+                    SphereDateColour = Color.black;
+                    break;
+            }
+            //SetColourOfType(ConnectionType.Date, SphereDateColour);
+            //SetColourOfType(ConnectionType.Publisher, SpherePublisherColour);
+            //SetColourOfType(ConnectionType.Authors, SphereAuthorColour);
+            ApplySphereColor();
+        }
+
+
 
         private void SetColourOfType(ConnectionType type, Color newColour)
         {
@@ -262,7 +351,7 @@ namespace NodeNetwork
 
                 nodeNetworks[i].RandomiseNodeLocations();
             }
-
+            ApplySphereColor();
             setupComplete = true;
         }
 
@@ -353,14 +442,28 @@ namespace NodeNetwork
             return false;
         }
 
-        private void ApplySphereColor(ref NodeConnection connection)
+        private void ApplySphereColor()
         {
-            switch (connection.connectionType) 
-            {
-                case ConnectionType.Authors:
 
-                    break;
-            }
+               foreach (var network in nodeNetworks)
+               {
+                foreach (var node in network.Nodes)
+                {
+                    switch (network.RelationToOrigin)
+                    {
+                        case ConnectionType.Date:
+
+                            node.GetComponent<MeshRenderer>().material.color = SphereDateColour;
+                            break;
+                        case ConnectionType.Publisher:
+                            node.GetComponent<MeshRenderer>().material.color = SpherePublisherColour;
+                            break;
+                        case ConnectionType.Authors:
+                            node.GetComponent<MeshRenderer>().material.color = SphereAuthorColour;
+                            break;
+                    }
+                }
+               }
         }
 
 
