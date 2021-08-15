@@ -1,12 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.UI;
-using UnityEngine.Windows.WebCam;
 
 namespace NodeNetwork
 {

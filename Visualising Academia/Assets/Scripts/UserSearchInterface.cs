@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEditor.IMGUI;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
 
 public class UserSearchInterface : MonoBehaviour
 {
