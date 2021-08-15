@@ -105,6 +105,7 @@ public class ClickOnDocuments : MonoBehaviour
     {
         if (options.ViewAllConnections) return;
         
+        viewingState = !viewingState;
         var node = hit.GetComponent<DocNode>();
         
         //  First, check if this is the OriginNode, it it is execute this separately and exit
@@ -126,24 +127,14 @@ public class ClickOnDocuments : MonoBehaviour
             //  If this isn't the originNode, execute as normal
             foreach (var iCon in node.incomingConnections)
             {
-                if (iCon.visible)
-                    iCon.connection.enabled = !iCon.connection.enabled;
-                else
-                {
-                    iCon.connection.enabled = false;
-                }
+                iCon.connection.enabled = iCon.visible && viewingState;
+
             }
 
             foreach (var oCon in node.outgoingConnections)
             {
-                if (oCon.visible)
-                {
-                    oCon.connection.enabled = !oCon.connection.enabled;
-                }
-                else
-                {
-                    oCon.connection.enabled = false;
-                }
+                oCon.connection.enabled = oCon.visible && viewingState;
+
 
                 // if (options.InternalNetworkView != NetworkOptions.InternalNetworkConnections.UNIQUE)
                 //     oCon.connection.enabled = !oCon.connection.enabled;
@@ -152,7 +143,6 @@ public class ClickOnDocuments : MonoBehaviour
             }
         }
 
-        viewingState = !viewingState;
         if (!viewingState && clearTarget)
         {
             displayWindow.GetComponent<PopupDisplay>().CloseWindow();

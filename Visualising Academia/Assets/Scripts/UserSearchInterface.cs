@@ -113,12 +113,12 @@ public class UserSearchInterface : MonoBehaviour
                 continue;
             }
             
-            if (CompareAttributes(closestMatch.Authors, item.Authors, true))
-            {
-                completedSearchQuery.AddMatch(item);
-                completedSearchQuery.matchName.Add(closestMatch.Authors.AttributeTitle);
-                continue;
-            }
+            // if (CompareAttributes(closestMatch.Authors, item.Authors, true))
+            // {
+            //     completedSearchQuery.AddMatch(item);
+            //     completedSearchQuery.matchName.Add(closestMatch.Authors.AttributeTitle);
+            //     continue;
+            // }
             if (CompareAttributes(closestMatch.DatePublished, item.DatePublished))
             {
                 completedSearchQuery.AddMatch(item);
@@ -126,6 +126,8 @@ public class UserSearchInterface : MonoBehaviour
             }
            if (completedSearchQuery.matches.Count != completedSearchQuery.matchName.Count)
                Debug.LogError("Error! Matches for OriginDocument don't add up!");
+           
+           
         }
        
         searchComplete = true; // Flag to other scripts to use my completed searchQuery.
@@ -176,7 +178,7 @@ public class UserSearchInterface : MonoBehaviour
     {
         if (!String.Equals(FTitle.text, FieldText)) data.Title.SetAttributeValue(FTitle.text);
         if (!String.Equals(FAuthorName.text, FieldText)) ParseTextIntoList(FAuthorName.text, data.Authors);
-        //if (!String.Equals(FPublisher.text, FieldText)) data.Publisher.SetAttributeValue(FPublisher.text);
+        if (!String.Equals(FPublisher.text, FieldText)) data.Publisher.SetAttributeValue(FPublisher.text);
         //if (!String.Equals(FIsPartOf.text, FieldText)) data.IsPartOf.SetAttributeValue(FIsPartOf.text);
         if (!String.Equals(FYearPublished.text, FieldText)) data.DatePublished.SetAttributeValue(FYearPublished.text);
     }
