@@ -46,7 +46,8 @@ public class ClickOnDocuments : MonoBehaviour
             {
                 print("hit window");
                 //  Ignore the click if the user is clicking the same node.
-                if (displayWindow.GetComponent<PopupDisplay>().TitleField.text == doc.Title.AttributeValue) return;
+                if (displayWindow.GetComponent<PopupDisplay>().TitleField.text == doc.Title.AttributeValue &&
+                    displayWindow.GetComponent<PopupDisplay>().DateField.text == doc.DatePublished.AttributeValue) return;
 
                 //  If the user clicks onto another node, close this one first.
                 if (TargetNode != null && hit.transform != TargetNode.transform)
@@ -54,7 +55,6 @@ public class ClickOnDocuments : MonoBehaviour
 
                 TargetNode = hit.transform.gameObject;
                 ToggleConnectionDisplay(TargetNode.transform);
-                displayWindow.SetActive(true);
                 displayWindow.GetComponent<PopupDisplay>().SetupField(doc);
             }
             else if (hit.transform.gameObject.TryGetComponent(out Dropdown drop))
@@ -103,6 +103,7 @@ public class ClickOnDocuments : MonoBehaviour
     }
     public void ToggleConnectionDisplay(Transform hit, bool clearTarget = true)
     {
+        if (hit == null) return;
         if (options.ViewAllConnections) return;
         
         viewingState = !viewingState;

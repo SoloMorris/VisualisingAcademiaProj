@@ -35,7 +35,6 @@ public class PopupDisplay : MonoBehaviour
         isPartofField.text = newData.IsPartOf.AttributeValue;
         PublisherField.text = newData.Publisher.AttributeValue;
         LanguageField.text = newData.Language.AttributeValue;
-        uiPanel.transform.position = newData.transform.position;
         //Camera.main.GetComponent<FreeFlyCamera>()._active = false;
         //Cursor.lockState = CursorLockMode.None;
     }
@@ -48,7 +47,6 @@ public class PopupDisplay : MonoBehaviour
         DateField.text = "";
         PublisherField.text = "";
         LanguageField.text = "";
-        gameObject.SetActive(false);
         //Camera.main.GetComponent<FreeFlyCamera>()._active = true;
     }
 }
