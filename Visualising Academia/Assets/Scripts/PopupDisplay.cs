@@ -46,6 +46,7 @@ public class PopupDisplay : MonoBehaviour
         DateField.text = "";
         PublisherField.text = "";
         LanguageField.text = "";
+        isPartofField.text = "";
         //Camera.main.GetComponent<FreeFlyCamera>()._active = true;
     }
 }
