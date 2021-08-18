@@ -2,7 +2,7 @@ VisualisaingAcademiaProj
 
 To use the application, open the unity project on "SolScene" and press play.
 
-The dataset can be accessed through Assets/Resources/newDataset.csv
+The dataset can be accessed through Assets/Resources/newDataset.csv.
 When you start the application you will be able to search by Title, Date or Publisher. You can copy+paste any of these entries from their cells
 in the spreadsheet or enter them, but they must match exactly.
 For this reason I recommend searching a year between 2010-2020 for the most reliable search results.
